@@ -5,12 +5,56 @@
     <title>Handlebars Example - Seasons</title>
     <meta charset="utf-8" />
     <style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700;900&display=swap');
+
+    body {
+        font-family: 'Roboto Mono', sans-serif;
+    }
+
     .handlebars {
         display: none;
     }
 
-    table {
+    .race-name {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        margin: 35px 0 4px 0;
+        font-size: 1em;
+        /*letter-spacing: -1px;*/
+    }
+
+    .race-table {
         width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    tr {
+        border-bottom: 1px solid #dedede;
+    }
+
+    td {
+        padding: 6px 6px 6px 0;
+        font-size: .9em;
+    }
+
+    .Democrat,
+    .DEM {
+        background: rgba(116, 173, 209, .6);
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .Republican,
+    .REP {
+        background: rgba(244, 109, 67, .6);
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        margin-right: 5px;
     }
 
     .background-bar {
@@ -21,15 +65,39 @@
 
     .color-bar {
         height: 100%;
-        background-color: #000;
         display: inline-block;
+    }
+
+    /*.Democrat {
+        background-color: rgba(116, 173, 209, .6);
+    }
+
+    .Republican {
+        background-color: rgba(244, 109, 67, .6);
+    }
+
+    .DEM {
+        background-color: rgba(116, 173, 209, .6);
+    }
+
+    .REP {
+        background-color: rgba(244, 109, 67, .6);
+    }*/
+
+    .LBR,
+    .APV {
+        background-color: #b2b2b2;
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        margin-right: 5px;
     }
     </style>
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
 </head>
 <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->
-<table id="list">
+<table id="list" class="race-table">
 </table>
 <!-- <script id="people-template" type="text/x-handlebars-template">
     {{#each ElectionResult.Contest}}
@@ -49,12 +117,12 @@
     </script> -->
 <script id="people-template" type="text/x-handlebars-template">
     {{#each Contest}}
-        <tr><td colspan="3">{{'@text'}}</td></tr>
+        <tr><td colspan="3" class="race-name">{{'@text'}}</td></tr>
         {{#if Choice.length }}
           {{#each Choice}}
             <tr>
               <td width="30%">{{'@text'}}</td>
-              <td width="50%"><div class="background-bar"><span class="color-bar" style="width:{{choiceVotePercent}}%">{{choiceVotePercent}}</span></div></td>
+              <td width="50%"><div class="background-bar"><span class="color-bar {{../party}} {{'@party'}}" style="width:{{choiceVotePercent}}%">{{choiceVotePercent}}</span></div></td>
               <td width="20%">{{'@totalVotes'}}</td>
             </tr>
           {{/each}}
@@ -62,7 +130,7 @@
           {{#with Choice}}
             <tr>
               <td>{{'@text'}}</td>
-              <td><div class="background-bar"><span class="color-bar" style="width:{{choiceVotePercent}}%">{{choiceVotePercent}}</span></div>{{choiceVotePercent}}</td>
+              <td><div class="background-bar"><span class="color-bar {{../party}} {{'@party'}}" style="width:{{choiceVotePercent}}%">{{choiceVotePercent}}</span></div>{{choiceVotePercent}}</td>
               <td>{{'@totalVotes'}}</td>
             </tr>
           {{/with}}
@@ -85,13 +153,16 @@ $(document).ready(function() {
     //     ]
     // };
 
-    var data_url = "test.json";
+    var data_url = "test_2024.json";
 
     $(document).ready(function() {
         $.getJSON(data_url,
             function(data) {
 
                 for (let i = 0; i < data.ElectionResult.Contest.length; i++) {
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                        data.ElectionResult.Contest[i].party = 'Democrat'
+                    } else data.ElectionResult.Contest[i].party = 'Republican'
                     if (Object.prototype.toString.call(data.ElectionResult.Contest[i].Choice) === '[object Array]') {
                         //test.push(true)
                         //} else test.push(false)
