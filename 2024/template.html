@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html class="no-js" lang="en">
 
 <head>
-    <title>Handlebars Example - Seasons</title>
-    <meta charset="utf-8" />
-    <style type="text/css">
-    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado Primary Election Results 2024 | The Denver Post</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700;900&display=swap');
 
     body {
@@ -36,7 +40,7 @@
     }
 
     td {
-        padding: 6px 6px 6px 0;
+        padding: 5px 5px 5px 0;
         font-size: .9em;
     }
 
@@ -46,41 +50,16 @@
         opacity: 1;
     }
 
-    .Democrat,
-    .DEM {
-        background: rgba(116, 173, 209, .6);
-        height: 12px;
-        width: 12px;
-        display: inline-block;
-        margin-right: 5px;
-    }
-
-    .Republican,
-    .REP {
-        background: rgba(244, 109, 67, .6);
-        height: 12px;
-        width: 12px;
-        display: inline-block;
-        margin-right: 5px;
-    }
-
     .background-bar {
         height: 100%;
         width: 95%;
-        background-color: #f8f8f8;
+        background-color: #eeeeee;
     }
 
     .color-bar {
         height: 100%;
+        margin-right: 5px;
         display: inline-block;
-    }
-
-    /*.Democrat {
-        background-color: rgba(116, 173, 209, .6);
-    }
-
-    .Republican {
-        background-color: rgba(244, 109, 67, .6);
     }
 
     .DEM {
@@ -89,23 +68,17 @@
 
     .REP {
         background-color: rgba(244, 109, 67, .6);
-    }*/
+    }
 
-    .LBR,
-    .APV {
-        background-color: #b2b2b2;
+    .OTH {
+        background-color: rgba(178, 178, 178, .7);
+    }
+
+    .party-color-square {
         height: 12px;
         width: 12px;
         display: inline-block;
         margin-right: 5px;
-    }
-
-    div.Democrat {
-        background: rgba(116, 173, 209, 1);
-    }
-
-    div.Republican {
-        background: rgba(244, 109, 67, .8);
     }
 
     div.DEM {
@@ -115,110 +88,95 @@
     div.REP {
         background: rgba(244, 109, 67, .8);
     }
+
+    div.OTH {
+        background: rgba(178, 178, 178, 1);
+    }
     </style>
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"> </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
 </head>
 <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->
-<div id="list" class="race-table"></div>
-<!-- <script id="people-template" type="text/x-handlebars-template">
-    {{#each ElectionResult.Contest}}
-        <h2>{{'@text'}}</h2>
-        {{#if Choice }}
-          {{#ifObject this}}
-              {{#with Choice}}
-                <p>{{'@text'}}</p>
-              {{/with}}
-          {{else}}
-                {{#each Choice}}
-                  <p>{{'@text'}}</p>
-                {{/each}}
-          {{/ifObject}}
-        {{/if}}
-      {{/each}}
-    </script> -->
-<script id="people-template" type="text/x-handlebars-template">
+<div id="election-results" class="race-table"></div>
+<script id="results-template" type="text/x-handlebars-template">
     {{#each Contest}}
-        <table class="race-table"><span class="race-name">{{'@text'}}</span>
-        <tbody>{{#if Choice.length }}
+      <table class="race-table">
+        <span class="race-name">{{'@text'}}</span>
+        {{#if Choice.length }}
           {{#each Choice}}
             <tr>
-              <td width="40%"><div class="{{'@party'}}"></div>{{'@text'}}</td>
-              <td width="40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td width="20%">{{'@totalVotes'}}</td>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td style="width:20%">{{'@totalVotes'}}</td>
             </tr>
           {{/each}}
         {{else}}
           {{#with Choice}}
             <tr>
-              <td width="40%"><div class="{{'@party'}}"></div>{{'@text'}}</td>
-              <td width="40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td width="20%">{{'@totalVotes'}}</td>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td style="width:20%">{{'@totalVotes'}}</td>
             </tr>
           {{/with}}
         {{/if}}
       {{/each}}
-    </tbody></table>
+    </table>
     </script>
 <script type="text/javascript">
 $(document).ready(function() {
+    var template = Handlebars.compile($("#results-template").html());
 
-    // compile our template
-    var template = Handlebars.compile($("#people-template").html());
-
-    var data_url = "test_2024.json";
+    var data_url = "test_2022.json";
 
     $.getJSON(data_url,
         function(data) {
-            //console.log(data.ElectionResult);
             for (let i = 0; i < data.ElectionResult.Contest.length; i++) {
-                // if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
-                //     data.ElectionResult.Contest[i].party = 'Democrat'
-                // } else data.ElectionResult.Contest[i].party = 'Republican'
+
+                // Check if the Choice is an array (multiple candidates) instead of an object (single candidate)
                 if (Object.prototype.toString.call(data.ElectionResult.Contest[i].Choice) === '[object Array]') {
                     var allVotes = [];
                     var sumChoiceVotes;
                     var choiceVotePercent;
                     for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
                         allVotes.push(Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']))
+
+                        // Sum all candidates' votes
                         sumChoiceVotes = allVotes.reduce((pv, cv) => pv + cv, 0);
-                        //}
-                        //for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                        for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                            data.ElectionResult.Contest[i].Choice[j].totalRaceVotes = sumChoiceVotes;
 
-                        // Sum the votes
-                        data.ElectionResult.Contest[i].Choice[j].totalRaceVotes = sumChoiceVotes;
+                            // Get candidate vote percentage
+                            choiceVotePercent = ((Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']) / sumChoiceVotes) * 100).toFixed(2);
+                            data.ElectionResult.Contest[i].Choice[j].choiceVotePercent = choiceVotePercent;
 
-                        // Get candidate vote percentage
-                        choiceVotePercent = ((Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']) / sumChoiceVotes) * 100).toFixed(2);
-                        data.ElectionResult.Contest[i].Choice[j].choiceVotePercent = choiceVotePercent;
-
-                        // Add party to candidate
-                        if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
-                            data.ElectionResult.Contest[i].Choice[j].party = 'DEM'
-                        } else if (data.ElectionResult.Contest[i]['@text'].includes('Republican')) {
-                            data.ElectionResult.Contest[i].Choice[j].party = 'DEM'
-                        } else data.ElectionResult.Contest[i].Choice[j].party = 'OTH';
+                            // Add party to candidate
+                            if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'DEM'
+                            } else if (data.ElectionResult.Contest[i]['@text'].includes('Republican')) {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'REP'
+                            };
+                            if (data.ElectionResult.Contest[i].Choice[j]['@party'] != 'DEM' && data.ElectionResult.Contest[i].Choice[j]['@party'] != 'REP') {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'OTH'
+                            }
+                        }
                     }
                 }
 
-                // If only one candidate (object rather than array) do same
+                // If only one candidate (object rather than array) do same as above
                 else {
                     data.ElectionResult.Contest[i].Choice.totalRaceVotes = data.ElectionResult.Contest[i].Choice['@totalVotes'];
                     choiceVotePercent = ((Number(data.ElectionResult.Contest[i].Choice['@totalVotes']) / Number(data.ElectionResult.Contest[i].Choice['@totalVotes'])) * 100).toFixed(2);
                     data.ElectionResult.Contest[i].Choice.choiceVotePercent = choiceVotePercent;
                 }
-///***************** I THINK THIS ISN'T RENDERING RIGHT *************************///
-                // Add party to candidate
                 if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
-                    data.ElectionResult.Contest[i].Choice.party = 'DEM'
+                    data.ElectionResult.Contest[i].Choice['@party'] = 'DEM'
                 } else if (data.ElectionResult.Contest[i]['@text'].includes('Republican')) {
-                    data.ElectionResult.Contest[i].Choice.party = 'DEM'
-                } else data.ElectionResult.Contest[i].Choice.party = 'OTH';
-            } // closes main for loop
-            $('#list').html(template(data.ElectionResult));
+                    data.ElectionResult.Contest[i].Choice['@party'] = 'REP'
+                } else data.ElectionResult.Contest[i].Choice['@party'] = 'OTH';
+            }
+
+            $('#election-results').html(template(data.ElectionResult));
             console.log(data.ElectionResult);
-        } // closes data function
-    ) // closes getJSON
+        }
+    )
 });
 </script>
 </body>
