@@ -120,11 +120,16 @@
       {{/each}}
     </table>
     </script>
-<script type="text/javascript">
+<script>
+// Function to add commas to numbers
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 $(document).ready(function() {
     var template = Handlebars.compile($("#results-template").html());
 
-    var data_url = "test_2022.json";
+    var data_url = "test_2024.json";
 
     $.getJSON(data_url,
         function(data) {
@@ -146,16 +151,23 @@ $(document).ready(function() {
                             // Get candidate vote percentage
                             choiceVotePercent = ((Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']) / sumChoiceVotes) * 100).toFixed(2);
                             data.ElectionResult.Contest[i].Choice[j].choiceVotePercent = choiceVotePercent;
+                        }
 
-                            // Add party to candidate
-                            if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
-                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'DEM'
-                            } else if (data.ElectionResult.Contest[i]['@text'].includes('Republican')) {
-                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'REP'
-                            };
-                            if (data.ElectionResult.Contest[i].Choice[j]['@party'] != 'DEM' && data.ElectionResult.Contest[i].Choice[j]['@party'] != 'REP') {
-                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'OTH'
-                            }
+                        // Add party to candidate
+                        if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                            data.ElectionResult.Contest[i].Choice[j]['@party'] = 'DEM'
+                        } else if (data.ElectionResult.Contest[i]['@text'].includes('Republican')) {
+                            data.ElectionResult.Contest[i].Choice[j]['@party'] = 'REP'
+                        };
+                        if (data.ElectionResult.Contest[i].Choice[j]['@party'] != 'DEM' && data.ElectionResult.Contest[i].Choice[j]['@party'] != 'REP') {
+                            data.ElectionResult.Contest[i].Choice[j]['@party'] = 'OTH'
+                        }
+                    }
+
+                    // Add commas to vote counts
+                    for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                        if (data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] != null) {
+                            data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] = numberWithCommas(data.ElectionResult.Contest[i].Choice[j]['@totalVotes'])
                         }
                     }
                 }
@@ -171,6 +183,9 @@ $(document).ready(function() {
                 } else if (data.ElectionResult.Contest[i]['@text'].includes('Republican')) {
                     data.ElectionResult.Contest[i].Choice['@party'] = 'REP'
                 } else data.ElectionResult.Contest[i].Choice['@party'] = 'OTH';
+                if (data.ElectionResult.Contest[i].Choice['@totalVotes'] != null) {
+                    data.ElectionResult.Contest[i].Choice['@totalVotes'] = numberWithCommas(data.ElectionResult.Contest[i].Choice['@totalVotes'])
+                }
             }
 
             $('#election-results').html(template(data.ElectionResult));
