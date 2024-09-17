@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Denver Mayor Handlebars template</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+</head>
+
+<body>
+    <div id="displayArea"></div>
+    <!-- <script id="myTemplate" type="text/x-handlebars-template">
+        {{#each candidates}}
+        <h1>Employee Name : {{this.name}}, Age : {{this.age}}</h1>
+        {{/each}} -->
+    <script id="myTemplate" type="text/x-handlebars-template">
+        {{#each candidates}}
+        <h1 style="color:red">DISTRICT {{District}}</h1>
+        {{#if (ifDem Party) }}
+            <h2 style="background:#1375b7;padding:5px;font-family:sans-serif;color:#fff">{{Name}} <span style="padding:7px;text-transform:uppercase;font-family:sans-serif;font-size:.9rem;color:#fff;font-weight:bold;float:right">Dem</span></h2>
+            {{else if (ifRep Party) }}
+            <h2 style="background:#c93135;padding:5px;font-family:sans-serif;color:#fff">{{Name}} <span style="padding:7px;text-transform:uppercase;font-family:sans-serif;font-size:.9rem;color:#fff;font-weight:bold;float:right">Rep</span></h2>
+            {{else}}
+            <h2 style="background:#a5a5a5;padding:5px;font-family:sans-serif;color:#fff">{{Name}} <span style="padding:7px;text-transform:uppercase;font-family:sans-serif;font-size:.9rem;color:#fff;font-weight:bold;float:right">{{partyAbbreviation Party}}</span></h2>
+        {{/if}}
+        <img style="float: right;width: 150px;padding-left: 25px" src="" />
+        <p style="margin: -15px 0 10px 0;font-size: .95em"><em><a href="{{[Campaign website]}}" target="_blank">Website</a></em></p>
+        <strong>Place of residence: </strong>{{[Place of residence]}}
+        <strong>Profession: </strong> {{Profession}}
+        <strong>Education: </strong>{{Education}}
+        <strong>Experience: </strong>{{Experience}}
+        <hr>
+        
+        {{/each}}
+    </script>
+    <script type="text/javascript">
+    Handlebars.registerHelper('ifDem', function(value) {
+        return value === 'Democratic Party';
+    });
+    Handlebars.registerHelper('ifRep', function(value) {
+        return value === 'Republican Party';
+    });
+    Handlebars.registerHelper('partyAbbreviation', function(Party) {
+        return Party.slice(0, 3)
+    })
+    var tmpHtml = document.getElementById("myTemplate").innerHTML;
+    var template = Handlebars.compile(tmpHtml);
+
+    // var data = {
+    //     candidates: [
+    //         { name: "John", age: 22 },
+    //         { name: "Dave", age: 34 },
+    //         { name: "Emily", age: 39 }
+    //     ]
+    // };   
+
+    var data = {
+        candidates: [
+        ]
+    };
+    var html = template(data);
+
+    document.getElementById("displayArea").innerHTML += html;
+    </script>
+</body>
+
+</html>

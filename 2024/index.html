@@ -97,22 +97,26 @@
         background: rgba(178, 178, 178, 1);
     }
 
+    .legend-wrapper {
+      border-bottom: 2px solid #aaa;
+    }
+
     .legend-text {
         display: inline-block;
         margin-right: 15px;
     }
 
     .timestamp {
-      font-size: .9em;
+      font-size: .8em;
       font-style: italic;
       color: #aaa;
+      margin: 2px 0 5px 0;
     }
     </style>
 </head>
 
 <body>
-    <div style ="border: 1px solid silver;padding:5px">
-        <legend class="fieldset-title"></legend>
+    <div class="legend-wrapper">
         <div><span class="party-color-square DEM"></span><span class="legend-text">DEM</span><span class="party-color-square REP"></span><span class="legend-text">REP</span><span class="party-color-square OTH"></span><span class="legend-text">OTHER</span></div>
         <p class="timestamp">Results updated <span id="timestamp"></span></p>
     </div>
@@ -163,7 +167,8 @@
     $(document).ready(function() {
         var template = Handlebars.compile($("#results-template").html());
 
-        var data_url = 'test_2_2024.json';
+        // var data_url = 'https://raw.githubusercontent.com/githamm/elections/master/2024/primary/results/election_data.json';
+        var data_url = 'election_data.json';
 
         $.getJSON(data_url,
             function(data) {
