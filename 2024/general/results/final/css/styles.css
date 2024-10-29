@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700;900&display=swap');
+
+body {
+    font-family: 'Roboto Mono', sans-serif;
+}
+
+.handlebars {
+    display: none;
+}
+
+.section-header {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #000;
+    color: #fff;
+    padding: 5px;
+    margin: 25px 0 0px 0;
+}
+
+.race-name {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    margin-top: 15px;
+    font-size: 1.2em;
+    display: inline-block;
+    /*letter-spacing: -1px;*/
+}
+
+.race-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+tr {
+    border-bottom: 1px solid #dedede;
+}
+
+td {
+    padding: 5px 5px 5px 0;
+    font-size: .9em;
+    line-height: 1.2;
+}
+
+.percent-vote {
+    display: inline-block;
+    padding: 1px 0 1px 4px;
+    opacity: .8;
+}
+
+.total-votes {}
+
+.background-bar {
+    height: 100%;
+    width: 95%;
+    background-color: #eeeeee;
+}
+
+.color-bar {
+    height: 100%;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.DEM {
+    background-color: rgba(116, 173, 209, .6);
+}
+
+.REP {
+    background-color: rgba(244, 109, 67, .6);
+}
+
+.OTH {
+    background-color: rgba(178, 178, 178, .7);
+}
+
+.YES {
+    background-color: rgba(94, 188, 94, .7);
+}
+
+.NO {
+    background-color: rgba(189, 94, 189, .7);
+}
+
+.party-color-square {
+    height: 12px;
+    width: 12px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+div.DEM,
+.legend-dem {
+    background: rgba(116, 173, 209, 1);
+}
+
+div.REP,
+.legend-rep {
+    background: rgba(244, 109, 67, .8);
+}
+
+div.OTH,
+.legend-oth {
+    background: rgba(178, 178, 178, 1);
+}
+
+div.YES {
+    background: rgba(94, 188, 94, 1);
+}
+
+div.NO {
+    background: rgba(189, 94, 189, 1);
+}
+
+.legend-wrapper {
+    border-bottom: 2px solid #aaa;
+}
+
+.legend-text {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.timestamp {
+    font-size: .8em;
+    font-style: italic;
+    color: #aaa;
+    margin: 2px 0 5px 0;
+}
+
+fieldset {
+    margin-bottom: 25px;
+}
+
+legend {
+    text-transform: uppercase;
+}
+
+select {
+    margin: 10px 10px 10px 0;
+    width: 120px;
+    padding: 5px 35px 5px 5px;
+    font-size: 15px;
+    border: 1px solid #CCC;
+    height: 34px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url(triangle.svg) 85% / 10% no-repeat #eee;
+    cursor: pointer;
+}
+
+button {
+    height: 34px;
+    /*width: 45px;
+        border-radius: 50%;*/
+    padding: 5px 10px 5px 10px;
+    background: #219600;
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #760096;
+}
+
+button:active {
+    background: #eee;
+    -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+    -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+    box-shadow: inset 0px 0px 5px #c1c1c1;
+    outline: none;
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado General Election County Results 2024 | The Denver Post</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
+    <script src="./js/county_results.js"></script>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <fieldset>
+        <legend>Choose a county</legend>
+        <select id="county-dropdown">
+            <option value="Adams" selected>Adams</option>
+            <option value="Alamosa">Alamosa</option>
+            <option value="Arapahoe">Arapahoe</option>
+            <option value="Archuleta">Archuleta</option>
+            <option value="Baca">Baca</option>
+            <option value="Bent">Bent</option>
+            <option value="Boulder">Boulder</option>
+            <option value="Broomfield">Broomfield</option>
+            <option value="Chaffee">Chaffee</option>
+            <option value="Cheyenne">Cheyenne</option>
+            <option value="Clear_Creek">Clear Creek</option>
+            <option value="Conejos">Conejos</option>
+            <option value="Costilla">Costilla</option>
+            <option value="Crowley">Crowley</option>
+            <option value="Custer">Custer</option>
+            <option value="Delta">Delta</option>
+            <option value="Denver">Denver</option>
+            <option value="Dolores">Dolores</option>
+            <option value="Douglas">Douglas</option>
+            <option value="Eagle">Eagle</option>
+            <option value="El_Paso">El Paso</option>
+            <option value="Elbert">Elbert</option>
+            <option value="Fremont">Fremont</option>
+            <option value="Garfield">Garfield</option>
+            <option value="Gilpin">Gilpin</option>
+            <option value="Grand">Grand</option>
+            <option value="Gunnison">Gunnison</option>
+            <option value="Hinsdale">Hinsdale</option>
+            <option value="Huerfano">Huerfano</option>
+            <option value="Jackson">Jackson</option>
+            <option value="Jefferson">Jefferson</option>
+            <option value="Kiowa">Kiowa</option>
+            <option value="Kit_Carson">Kit Carson</option>
+            <option value="La_Plata">La Plata</option>
+            <option value="Lake">Lake</option>
+            <option value="Larimer">Larimer</option>
+            <option value="Las_Animas">Las Animas</option>
+            <option value="Lincoln">Lincoln</option>
+            <option value="Logan">Logan</option>
+            <option value="Mesa">Mesa</option>
+            <option value="Mineral">Mineral</option>
+            <option value="Moffat">Moffat</option>
+            <option value="Montezuma">Montezuma</option>
+            <option value="Montrose">Montrose</option>
+            <option value="Morgan">Morgan</option>
+            <option value="Otero">Otero</option>
+            <option value="Ouray">Ouray</option>
+            <option value="Park">Park</option>
+            <option value="Phillips">Phillips</option>
+            <option value="Pitkin">Pitkin</option>
+            <option value="Prowers">Prowers</option>
+            <option value="Pueblo">Pueblo</option>
+            <option value="Rio_Blanco">Rio Blanco</option>
+            <option value="Rio_Grande">Rio Grande</option>
+            <option value="Routt">Routt</option>
+            <option value="Saguache">Saguache</option>
+            <option value="San_Juan">San Juan</option>
+            <option value="San_Miguel">San Miguel</option>
+            <option value="Sedgwick">Sedgwick</option>
+            <option value="Summit">Summit</option>
+            <option value="Teller">Teller</option>
+            <option value="Washington">Washington</option>
+            <option value="Weld">Weld</option>
+            <option value="Yuma">Yuma</option>
+        </select>
+        <button onclick="getDropdownData();">Get results</button>
+    </fieldset>
+    <div class="legend-wrapper">
+        <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER/NO PARTY</span></div>
+        <p class="timestamp">Results updated <span id="timestamp"></span></p>
+    </div>
+    <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->
+    <!-- Extras page for 2002 primary results: https://extras.denverpost.com/app/elections/2022/primary-election-results/clarity.html -->
+    <h2 id="county-name"></h2>
+    <div id="election-results"></div>
+    <script id="results-template" type="text/x-handlebars-template">
+        {{#each resultsArray}}
+          <table class="race-table">
+            <span class="race-name">{{race}}</span>
+            {{#if choices.length }}
+              {{#eachByVotePct choices}}
+                <tr>
+                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
+                  <td class="total-votes" style="width:20%">{{votes}}</td>
+                </tr>
+              {{/eachByVotePct}}
+            {{/if}}
+          </table>
+        {{/each}}
+    </script>
+</body>
+
+</html>
