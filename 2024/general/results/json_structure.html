@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <script>
+    var data_url = './2022_statewide_results.json';
+
+    $.getJSON(data_url,
+        function(data) {
+            //console.log(data.Contests[0].CH);
+
+            let resultsArray = [];
+            for (i = 0; i < data.Contests.length; i++) {
+                race_name = data.Contests[i].C;
+                resultsArray.push({ race_name })
+            }
+
+            // let raceArray = [];
+            // for (k = 0; k < data.Contests.length; k++) {
+            //     for (i = 0; i < data.Contests[k].CH.length; i++) {
+            //         choice_name = data.Contests[k].CH[i];
+            //         choice_party = data.Contests[k].P[i];
+            //         choice_percent = data.Contests[k].PCT[i];
+            //         choice_votes = data.Contests[k].V[i];
+            //         raceArray.push({ choice_name, choice_party, choice_percent, choice_votes })
+            //     }
+            // }
+
+            // This almost works
+            // let resultsArray = [];
+            // let resultsTest = {
+            //     results2: []
+            // }
+            // for (k = 0; k < data.Contests.length; k++) {
+            //     resultsTest.race_name = data.Contests[k].C;
+            //     //resultsArray.push({ race_name });
+            //     results = [];
+            //     for (i = 0; i < data.Contests[k].CH.length; i++) {
+            //         choice_name = data.Contests[k].CH[i];
+            //         choice_party = data.Contests[k].P[i];
+            //         choice_percent = data.Contests[k].PCT[i];
+            //         choice_votes = data.Contests[k].V[i];
+            //         results.push({ choice_name, choice_party, choice_percent, choice_votes })
+            //     }
+            //     resultsTest['results2'].push(results);
+            //     break
+            // }
+
+            // let resultsObject = {};
+            // for (i = 0; i < data.Contests.length; i++) {
+            //     let resultsObject = {};
+            //     resultsObject['race_name' + i] = data.Contests[i].C
+            // }
+
+            let results = [];
+            for (i = 0; i < data.Contests.length; i++) {
+                let resultsTemp = [];
+                for (j = 0; j < data.Contests[i].CH.length; j++) {
+                    choice_name = data.Contests[i].CH[j];
+                    choice_party = data.Contests[i].P[j];
+                    choice_percent = data.Contests[i].PCT[j];
+                    choice_votes = data.Contests[i].V[j];
+                    resultsTemp.push({ choice_name, choice_party, choice_percent, choice_votes })
+                }
+                results.push(resultsTemp);
+            }
+
+            // for (let i = 0; i < results.length; i++) {
+            //     resultsObject[i].results2 = results[i];
+            // }
+
+            var newArray = resultsArray.map((e,i) => [e,results[i]])
+            console.log(newArray);
+
+            // THIS IS REALLY CLOSE, JUST DOENS'T HAVE THE RESULTS ARRAY AS A CHILD OF RACE_NAME
+            var array3 = results.map((obj, index) => ({
+                ...obj,
+                ...resultsArray[index]
+            }));
+
+            //console.log(array3);
+
+            const finalData = { ...array3[0].choice_name, ...array3 };
+            //console.log(finalData);
+        })
+    </script>
+</body>
+
+</html>

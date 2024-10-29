@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado Primary Election Results 2024 | The Denver Post</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700;900&display=swap');
+
+    body {
+        font-family: 'Roboto Mono', sans-serif;
+    }
+
+    .handlebars {
+        display: none;
+    }
+
+    .race-name {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        margin: 25px 0 4px 0;
+        font-size: 1.1em;
+        display: inline-block;
+        /*letter-spacing: -1px;*/
+    }
+
+    .race-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    tr {
+        border-bottom: 1px solid #dedede;
+    }
+
+    td {
+        padding: 5px 5px 5px 0;
+        font-size: .9em;
+        line-height: 1.2;
+    }
+
+    .percent-vote {
+        display: inline-block;
+        padding-left: 3px;
+        opacity: .8;
+    }
+
+    .total-votes {
+    }
+
+    .background-bar {
+        height: 100%;
+        width: 95%;
+        background-color: #eeeeee;
+    }
+
+    .color-bar {
+        height: 100%;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+    .DEM {
+        background-color: rgba(116, 173, 209, .6);
+    }
+
+    .REP {
+        background-color: rgba(244, 109, 67, .6);
+    }
+
+    .OTH {
+        background-color: rgba(178, 178, 178, .7);
+    }
+
+    .YES {
+        background-color: rgba(94, 188, 94, .7);
+    }
+
+    .NO {
+        background-color: rgba(189, 94, 189, .7);
+    }
+
+    .party-color-square {
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    div.DEM {
+        background: rgba(116, 173, 209, 1);
+    }
+
+    div.REP {
+        background: rgba(244, 109, 67, .8);
+    }
+
+    div.OTH {
+        background: rgba(178, 178, 178, 1);
+    }
+
+    div.YES {
+        background: rgba(94, 188, 94, 1);
+    }
+
+    div.NO {
+        background: rgba(189, 94, 189, 1);
+    }
+
+    .legend-wrapper {
+      border-bottom: 2px solid #aaa;
+    }
+
+    .legend-text {
+        display: inline-block;
+        margin-right: 15px;
+    }
+
+    .timestamp {
+      font-size: .8em;
+      font-style: italic;
+      color: #aaa;
+      margin: 2px 0 5px 0;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="legend-wrapper">
+        <div><span class="party-color-square DEM"></span><span class="legend-text">DEM</span><span class="party-color-square REP"></span><span class="legend-text">REP</span><span class="party-color-square OTH"></span><span class="legend-text">OTHER/NO PARTY</span></div>
+        <p class="timestamp">Results updated <span id="timestamp"></span></p>
+    </div>
+    <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->
+    <!-- Extras page for 2002 primary results: https://extras.denverpost.com/app/elections/2022/primary-election-results/clarity.html -->
+    <div id="election-results"></div>
+    <script id="results-template" type="text/x-handlebars-template">
+        {{#each .}}
+        <table class="race-table">
+            <span class="race-name">{{C}}</span>
+                {{#each CH}}
+                <tr>
+                    <td style="width:40%"><div class="party-color-square {{lookup ../P @index}}"></div>{{.}}</td>
+                    <td style="width:40%"><div class="background-bar"><span class="color-bar {{lookup ../P @index}}" style="width:{{lookup ../PCT @index}}%"><span class="percent-vote">{{lookup ../PCT @index}}%</span></span></div></td>
+                    <td class="total-votes" style="width:20%">{{lookup ../V @index}}</td>
+                </tr>
+                {{/each}}
+        {{/each}}
+    </table>
+    </script>
+    <!-- <script id="results-template" type="text/x-handlebars-template">
+        {{#each Contest}}
+      <table class="race-table">
+        <span class="race-name">{{'@text'}}</span>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script> -->
+    <script>
+    // Handlebars helper function to sort results
+    Handlebars.registerHelper('eachByVotePct', function(context, options) {
+        var output = '';
+        var contextSorted = context.concat()
+            .sort(function(a, b) { return b.V - a.V });
+        for (var i = 0, j = contextSorted.length; i < j; i++) {
+            output += options.fn(contextSorted[i]);
+        }
+        return output;
+    });
+
+    // Function to add commas to numbers
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    $(document).ready(function() {
+        var template = Handlebars.compile($("#results-template").html());
+
+        // Arapahoe
+        //var data_url = 'https:/results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/sum.json';
+        // Conejos
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Conejos/115916/314636/json/sum.json';
+        // Eagle 2022 general
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Eagle/115924/315876/json/sum.json';
+        // Eagle 2024 primary
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Eagle/119964/334110/json/sum.json';
+        // Eagle 2020 general
+        //var data_url = 'https://results.enr.clarityelections.com//CO/Eagle/105996/272208/json/sum.json';
+        // Denver 2022 general
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Denver/115921/314513/json/sum.json';
+        // Douglas 2022 general
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Douglas/115923/316133/json/sum.json';
+        // Dolores 2022 general
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Dolores/115922/315046/json/sum.json';
+        var data_url = 'Gunnison_data.json';
+
+        $.getJSON(data_url,
+            function(data) {
+
+                let resultsData = data.Contests;
+
+                for (let i = 0; i < resultsData.length; i++) {
+
+                    for (let j = 0; j < resultsData[i].P.length; j++) {
+
+                        // Set party to "OTH" if not "DEM" or "REP"
+                        if (resultsData[i].P[j] != 'DEM' && resultsData[i].P[j] != 'REP') {
+                            resultsData[i].P[j] = 'OTH'
+                        }
+                        // Change colors for Yes/No contests
+                        if (resultsData[i].CH[j] === 'Yes' || resultsData[i].CH[j] === 'Yes/For') {
+                            resultsData[i].P[j] = 'YES'
+                        } else if (resultsData[i].CH[j] === 'No' || resultsData[i].CH[j] === 'No/Against') {
+                            resultsData[i].P[j] = 'NO'
+                        }
+                        // Get candidate vote percentage but show a zero instead of NaN if no results
+                        if (resultsData[i].V[j] != 0) {
+                            resultsData[i].PCT[j] = (resultsData[i].PCT[j]).toFixed(2);
+                            resultsData[i].PCT[j] = resultsData[i].PCT[j]
+                        } else resultsData[i].PCT[j] = 0
+                        // Add commas to vote counts
+                        if (resultsData[i].V[j] != null) {
+                            resultsData[i].V[j] = numberWithCommas(resultsData[i].V[j])
+                        }
+                    }
+                }
+
+                //var timestamp = document.getElementById('timestamp');
+                //timestamp.innerHTML = (resultsDataElectionResult.Timestamp).slice(0, -4);
+
+                // for (let i = 0; i < resultsDataElectionResult.Contest.length; i++) {
+
+                //     // Change some race phrasing
+                //     if (resultsDataElectionResult.Contest[i]['@text'].includes('118th United States Congress') == true) {
+                //         resultsDataElectionResult.Contest[i]['@text'] = resultsDataElectionResult.Contest[i]['@text'].replace('Representative to the 118th United States Congress', 'U.S. Representative')
+                //     } else if (resultsDataElectionResult.Contest[i]['@text'].includes('119th United States Congress') == true) {
+                //         resultsDataElectionResult.Contest[i]['@text'] = resultsDataElectionResult.Contest[i]['@text'].replace('Representative to the 119th United States Congress', 'U.S. Representative')
+                //     }
+
+                //     // Check if the Choice is an array (multiple candidates) instead of an object (single candidate)
+                //     if (Object.prototype.toString.call(resultsDataElectionResult.Contest[i].Choice) === '[object Array]') {
+                //         var allVotes = [];
+                //         var sumChoiceVotes;
+                //         var choiceVotePercent;
+                //         for (let j = 0; j < resultsDataElectionResult.Contest[i].Choice.length; j++) {
+                //             allVotes.push(Number(resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes']))
+
+                //             // Sum all candidates' votes
+                //             sumChoiceVotes = allVotes.reduce((pv, cv) => pv + cv, 0);
+                //             for (let j = 0; j < resultsDataElectionResult.Contest[i].Choice.length; j++) {
+                //                 resultsDataElectionResult.Contest[i].Choice[j].totalRaceVotes = sumChoiceVotes;
+
+                //                 // Get candidate vote percentage but show a zero instead of NaN if no results
+                //                 if (resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'] != 0) {
+                //                     choiceVotePercent = ((Number(resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes']) / sumChoiceVotes) * 100).toFixed(2);
+                //                     resultsDataElectionResult.Contest[i].Choice[j].choiceVotePercent = choiceVotePercent
+                //                 } else resultsDataElectionResult.Contest[i].Choice[j].choiceVotePercent = 0
+                //             }
+
+                //             // Add party to candidate
+                //             // if (resultsDataElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                //             //     resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'DEM'
+                //             // } else if (resultsDataElectionResult.Contest[i]['@text'].includes('Republican')) {
+                //             //     resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'REP'
+                //             // };
+                //             if (resultsDataElectionResult.Contest[i].Choice[j]['@party'] != 'DEM' && resultsDataElectionResult.Contest[i].Choice[j]['@party'] != 'REP') {
+                //                 resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'OTH'
+                //             }
+                //             if (resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'Yes' || resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'Yes/For') {
+                //                 resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'YES'
+                //             } else if (resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'No' || resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'No/Against') {
+                //                 resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'NO'
+                //             }
+                //         }
+
+                //         // Add commas to vote counts
+                //         for (let j = 0; j < resultsDataElectionResult.Contest[i].Choice.length; j++) {
+                //             if (resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'] != null) {
+                //                 resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'] = numberWithCommas(resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'])
+                //             }
+                //         }
+                //     }
+
+                //     // If only one candidate (object rather than array) do same as above
+                //     else {
+                //         resultsDataElectionResult.Contest[i].Choice.totalRaceVotes = resultsDataElectionResult.Contest[i].Choice['@totalVotes'];
+                //         if (resultsDataElectionResult.Contest[i].Choice['@totalVotes'] != 0) {
+                //             choiceVotePercent = ((Number(resultsDataElectionResult.Contest[i].Choice['@totalVotes']) / Number(resultsDataElectionResult.Contest[i].Choice['@totalVotes'])) * 100).toFixed(2);
+                //             resultsDataElectionResult.Contest[i].Choice.choiceVotePercent = choiceVotePercent
+                //         } else resultsDataElectionResult.Contest[i].Choice.choiceVotePercent = 0
+                //     }
+                //     if (resultsDataElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                //         resultsDataElectionResult.Contest[i].Choice['@party'] = 'DEM'
+                //     } else if (resultsDataElectionResult.Contest[i]['@text'].includes('Republican')) {
+                //         resultsDataElectionResult.Contest[i].Choice['@party'] = 'REP'
+                //     } else resultsDataElectionResult.Contest[i].Choice['@party'] = 'OTH';
+                //     if (resultsDataElectionResult.Contest[i].Choice['@totalVotes'] != null) {
+                //         resultsDataElectionResult.Contest[i].Choice['@totalVotes'] = numberWithCommas(resultsDataElectionResult.Contest[i].Choice['@totalVotes'])
+                //     }
+                // }
+
+                // function sorting(votes) {
+                //     return votes.sort((a, b) => b.V - a.V);
+                // }
+                //console.log(resultsData);
+
+                $('#election-results').html(template(resultsData));
+
+            }
+        )
+    })
+    </script>
+</body>
+
+</html>

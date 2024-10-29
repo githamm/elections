@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado General Election County Results 2024 | The Denver Post</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700;900&display=swap');
+
+    /*body {
+        font-family: 'Roboto Mono', sans-serif;
+    }
+
+    .handlebars {
+        display: none;
+    }
+
+    .race-name {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        margin: 25px 0 4px 0;
+        font-size: 1.1em;
+        display: inline-block;
+    }
+
+    .race-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    tr {
+        border-bottom: 1px solid #dedede;
+    }
+
+    td {
+        padding: 5px 5px 5px 0;
+        font-size: .9em;
+        line-height: 1.2;
+    }
+
+    .percent-vote {
+        display: inline-block;
+        padding-left: 3px;
+        opacity: .8;
+    }
+
+    .total-votes {
+    }
+
+    .background-bar {
+        height: 100%;
+        width: 95%;
+        background-color: #eeeeee;
+    }
+
+    .color-bar {
+        height: 100%;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+    .DEM {
+        background-color: rgba(116, 173, 209, .6);
+    }
+
+    .REP {
+        background-color: rgba(244, 109, 67, .6);
+    }
+
+    .OTH {
+        background-color: rgba(178, 178, 178, .7);
+    }
+
+    .YES {
+        background-color: rgba(94, 188, 94, .7);
+    }
+
+    .NO {
+        background-color: rgba(189, 94, 189, .7);
+    }
+
+    .party-color-square {
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    div.DEM {
+        background: rgba(116, 173, 209, 1);
+    }
+
+    div.REP {
+        background: rgba(244, 109, 67, .8);
+    }
+
+    div.OTH {
+        background: rgba(178, 178, 178, 1);
+    }
+
+    div.YES {
+        background: rgba(94, 188, 94, 1);
+    }
+
+    div.NO {
+        background: rgba(189, 94, 189, 1);
+    }
+
+    .legend-wrapper {
+      border-bottom: 2px solid #aaa;
+    }
+
+    .legend-text {
+        display: inline-block;
+        margin-right: 15px;
+    }
+
+    .timestamp {
+      font-size: .8em;
+      font-style: italic;
+      color: #aaa;
+      margin: 2px 0 5px 0;
+    }
+
+    fieldset {
+        margin-bottom: 25px;
+    }
+
+    legend {
+        text-transform: uppercase;
+    }
+
+    select {
+      margin: 10px 10px 10px 0;
+      width: 120px;
+      padding: 5px 35px 5px 5px;
+      font-size: 15px;
+      border: 1px solid #CCC;
+      height: 34px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: url(triangle.svg) 85% / 10% no-repeat #eee;
+      cursor: pointer;
+    }
+
+    button {
+        height: 34px;
+        padding: 5px 10px 5px 10px;
+        background: #219600;
+        border: none;
+        color: #fff;
+        font-size: 15px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #760096;
+    }
+
+    button:active {
+      background: #eee;
+        -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+            -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+                box-shadow: inset 0px 0px 5px #c1c1c1;
+    outline: none;*/
+}
+    </style>
+</head>
+
+<body>
+    <fieldset>
+        <legend>Choose a county</legend>
+        <select id="county-dropdown">
+            <option value="Adams" selected>Adams</option>
+            <option value="Alamosa">Alamosa</option>
+            <option value="Arapahoe">Arapahoe</option>
+            <option value="Archuleta">Archuleta</option>
+            <option value="Baca">Baca</option>
+            <option value="Bent">Bent</option>
+            <option value="Boulder">Boulder</option>
+            <option value="Broomfield">Broomfield</option>
+            <option value="Chaffee">Chaffee</option>
+            <option value="Cheyenne">Cheyenne</option>
+            <option value="Clear_Creek">Clear Creek</option>
+            <option value="Conejos">Conejos</option>
+            <option value="Costilla">Costilla</option>
+            <option value="Crowley">Crowley</option>
+            <option value="Custer">Custer</option>
+            <option value="Delta">Delta</option>
+            <option value="Denver">Denver</option>
+            <option value="Dolores">Dolores</option>
+            <option value="Douglas">Douglas</option>
+            <option value="Eagle">Eagle</option>
+            <option value="El_Paso">El Paso</option>
+            <option value="Elbert">Elbert</option>
+            <option value="Fremont">Fremont</option>
+            <option value="Garfield">Garfield</option>
+            <option value="Gilpin">Gilpin</option>
+            <option value="Grand">Grand</option>
+            <option value="Gunnison">Gunnison</option>
+            <option value="Hinsdale">Hinsdale</option>
+            <option value="Huerfano">Huerfano</option>
+            <option value="Jackson">Jackson</option>
+            <option value="Jefferson">Jefferson</option>
+            <option value="Kiowa">Kiowa</option>
+            <option value="Kit_Carson">Kit Carson</option>
+            <option value="La_Plata">La Plata</option>
+            <option value="Lake">Lake</option>
+            <option value="Larimer">Larimer</option>
+            <option value="Las_Animas">Las Animas</option>
+            <option value="Lincoln">Lincoln</option>
+            <option value="Logan">Logan</option>
+            <option value="Mesa">Mesa</option>
+            <option value="Mineral">Mineral</option>
+            <option value="Moffat">Moffat</option>
+            <option value="Montezuma">Montezuma</option>
+            <option value="Montrose">Montrose</option>
+            <option value="Morgan">Morgan</option>
+            <option value="Otero">Otero</option>
+            <option value="Ouray">Ouray</option>
+            <option value="Park">Park</option>
+            <option value="Phillips">Phillips</option>
+            <option value="Pitkin">Pitkin</option>
+            <option value="Prowers">Prowers</option>
+            <option value="Pueblo">Pueblo</option>
+            <option value="Rio_Blanco">Rio Blanco</option>
+            <option value="Rio_Grande">Rio Grande</option>
+            <option value="Routt">Routt</option>
+            <option value="Saguache">Saguache</option>
+            <option value="San_Juan">San Juan</option>
+            <option value="San_Miguel">San Miguel</option>
+            <option value="Sedgwick">Sedgwick</option>
+            <option value="Summit">Summit</option>
+            <option value="Teller">Teller</option>
+            <option value="Washington">Washington</option>
+            <option value="Weld">Weld</option>
+            <option value="Yuma">Yuma</option>
+        </select>
+        <button onclick="getDropdownData();">Get results</button>
+    </fieldset>
+    <div class="legend-wrapper">
+        <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER/NO PARTY</span></div>
+        <p class="timestamp">Results updated <span id="timestamp"></span></p>
+    </div>
+    <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->
+    <!-- Extras page for 2002 primary results: https://extras.denverpost.com/app/elections/2022/primary-election-results/clarity.html -->
+    <h2 id="county-name"></h2>
+    <div id="election-results"></div>
+    <script id="results-template" type="text/x-handlebars-template">
+        {{#each resultsArray}}
+          <table class="race-table">
+            <span class="race-name">{{race}}</span>
+            {{#if choices.length }}
+              {{#eachByVotePct choices}}
+                <tr>
+                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
+                  <td class="total-votes" style="width:20%">{{votes}}</td>
+                </tr>
+              {{/eachByVotePct}}
+            {{/if}}
+          </table>
+        {{/each}}
+    </script>
+    <script>
+    // Handlebars helper function to sort results
+    Handlebars.registerHelper('eachByVotePct', function(context, options) {
+        let output = '';
+        let contextSorted = context.concat()
+            .sort(function(a, b) { return b.pct - a.pct });
+        for (let i = 0, j = contextSorted.length; i < j; i++) {
+            output += options.fn(contextSorted[i]);
+        }
+        return output;
+    });
+
+    // Function to add commas to numbers
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function getDropdownData() {
+        $(document).ready(function() {
+
+            // Get county name from dropdown text for county header
+            let sel = document.getElementById('county-dropdown');
+            let countyName = sel.options[sel.selectedIndex].text;
+            document.getElementById('county-name').innerHTML = countyName + ' County';
+
+            let template = Handlebars.compile($("#results-template").html());
+
+            // Arapahoe
+            //let data_url = 'https:/results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/sum.json';
+            // Conejos
+            //let data_url = 'https://results.enr.clarityelections.com/CO/Conejos/115916/314636/json/sum.json';
+            // Eagle 2022 general
+            //let data_url = 'https://results.enr.clarityelections.com/CO/Eagle/115924/315876/json/sum.json';
+            // Eagle 2024 primary
+            //let data_url = 'https://results.enr.clarityelections.com/CO/Eagle/119964/334110/json/sum.json';
+            // Eagle 2020 general
+            //let data_url = 'https://results.enr.clarityelections.com//CO/Eagle/105996/272208/json/sum.json';
+            // Denver 2022 general
+            //let data_url = 'https://results.enr.clarityelections.com/CO/Denver/115921/314513/json/sum.json';
+            // Douglas 2022 general
+            //let data_url = 'https://results.enr.clarityelections.com/CO/Douglas/115923/316133/json/sum.json';
+            // Dolores 2022 general
+            //let data_url = 'https://results.enr.clarityelections.com/CO/Dolores/115922/315046/json/sum.json';
+            //let data_url = myVariable;
+
+            // Construct data_url from dropdown value
+            let data_url = document.getElementById('county-dropdown').value + '_data.json';
+
+            $.getJSON(data_url,
+                function(data) {
+                    let resultsObject = {};
+                    let resultsArray = [];
+
+                    for (let i = 0; i < data.Contests.length; i++) {
+                        let results = {};
+                        let choices = [];
+                        for (let j = 0; j < data.Contests[i].P.length; j++) {
+
+                            // Set party to "OTH" if not "DEM" or "REP"
+                            if (data.Contests[i].P[j] != 'DEM' && data.Contests[i].P[j] != 'REP') {
+                                data.Contests[i].P[j] = 'OTH'
+                            }
+                            // Change colors for Yes/No contests
+                            if (data.Contests[i].CH[j] === 'Yes' || data.Contests[i].CH[j] === 'Yes/For') {
+                                data.Contests[i].P[j] = 'YES'
+                            } else if (data.Contests[i].CH[j] === 'No' || data.Contests[i].CH[j] === 'No/Against') {
+                                data.Contests[i].P[j] = 'NO'
+                            }
+                            // Get candidate vote percentage but show a zero instead of NaN if no results
+                            if (data.Contests[i].V[j] != 0) {
+                                data.Contests[i].PCT[j] = (data.Contests[i].PCT[j]).toFixed(2);
+                                data.Contests[i].PCT[j] = data.Contests[i].PCT[j]
+                            } else data.Contests[i].PCT[j] = 0
+                            // Add commas to vote counts
+                            if (data.Contests[i].V[j] != null) {
+                                data.Contests[i].V[j] = numberWithCommas(data.Contests[i].V[j])
+                            }
+
+                            results.race = data.Contests[i].C;
+                            choices.push({
+                                //Race: data.Contests[0].C,
+                                name: data.Contests[i].CH[j],
+                                party: data.Contests[i].P[j],
+                                votes: data.Contests[i].V[j],
+                                pct: data.Contests[i].PCT[j]
+                            });
+                        }
+                        results.choices = choices;
+                        resultsArray.push(results);
+                    }
+                    resultsObject.resultsArray = resultsArray;
+                    console.log(data);
+
+                    $('#election-results').html(template(resultsObject));
+
+                    //let timestamp = document.getElementById('timestamp');
+                    //timestamp.innerHTML = (resultsDataElectionResult.Timestamp).slice(0, -4);
+
+                    // for (let i = 0; i < resultsDataElectionResult.Contest.length; i++) {
+
+                    //     // Change some race phrasing
+                    //     if (resultsDataElectionResult.Contest[i]['@text'].includes('118th United States Congress') == true) {
+                    //         resultsDataElectionResult.Contest[i]['@text'] = resultsDataElectionResult.Contest[i]['@text'].replace('Representative to the 118th United States Congress', 'U.S. Representative')
+                    //     } else if (resultsDataElectionResult.Contest[i]['@text'].includes('119th United States Congress') == true) {
+                    //         resultsDataElectionResult.Contest[i]['@text'] = resultsDataElectionResult.Contest[i]['@text'].replace('Representative to the 119th United States Congress', 'U.S. Representative')
+                    //     }
+
+                    //     // Check if the Choice is an array (multiple candidates) instead of an object (single candidate)
+                    //     if (Object.prototype.toString.call(resultsDataElectionResult.Contest[i].Choice) === '[object Array]') {
+                    //         let allVotes = [];
+                    //         let sumChoiceVotes;
+                    //         let choiceVotePercent;
+                    //         for (let j = 0; j < resultsDataElectionResult.Contest[i].Choice.length; j++) {
+                    //             allVotes.push(Number(resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes']))
+
+                    //             // Sum all candidates' votes
+                    //             sumChoiceVotes = allVotes.reduce((pv, cv) => pv + cv, 0);
+                    //             for (let j = 0; j < resultsDataElectionResult.Contest[i].Choice.length; j++) {
+                    //                 resultsDataElectionResult.Contest[i].Choice[j].totalRaceVotes = sumChoiceVotes;
+
+                    //                 // Get candidate vote percentage but show a zero instead of NaN if no results
+                    //                 if (resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'] != 0) {
+                    //                     choiceVotePercent = ((Number(resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes']) / sumChoiceVotes) * 100).toFixed(2);
+                    //                     resultsDataElectionResult.Contest[i].Choice[j].choiceVotePercent = choiceVotePercent
+                    //                 } else resultsDataElectionResult.Contest[i].Choice[j].choiceVotePercent = 0
+                    //             }
+
+                    //             // Add party to candidate
+                    //             // if (resultsDataElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                    //             //     resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'DEM'
+                    //             // } else if (resultsDataElectionResult.Contest[i]['@text'].includes('Republican')) {
+                    //             //     resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'REP'
+                    //             // };
+                    //             if (resultsDataElectionResult.Contest[i].Choice[j]['@party'] != 'DEM' && resultsDataElectionResult.Contest[i].Choice[j]['@party'] != 'REP') {
+                    //                 resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'OTH'
+                    //             }
+                    //             if (resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'Yes' || resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'Yes/For') {
+                    //                 resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'YES'
+                    //             } else if (resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'No' || resultsDataElectionResult.Contest[i].Choice[j]['@text'] === 'No/Against') {
+                    //                 resultsDataElectionResult.Contest[i].Choice[j]['@party'] = 'NO'
+                    //             }
+                    //         }
+
+                    //         // Add commas to vote counts
+                    //         for (let j = 0; j < resultsDataElectionResult.Contest[i].Choice.length; j++) {
+                    //             if (resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'] != null) {
+                    //                 resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'] = numberWithCommas(resultsDataElectionResult.Contest[i].Choice[j]['@totalVotes'])
+                    //             }
+                    //         }
+                    //     }
+
+                    //     // If only one candidate (object rather than array) do same as above
+                    //     else {
+                    //         resultsDataElectionResult.Contest[i].Choice.totalRaceVotes = resultsDataElectionResult.Contest[i].Choice['@totalVotes'];
+                    //         if (resultsDataElectionResult.Contest[i].Choice['@totalVotes'] != 0) {
+                    //             choiceVotePercent = ((Number(resultsDataElectionResult.Contest[i].Choice['@totalVotes']) / Number(resultsDataElectionResult.Contest[i].Choice['@totalVotes'])) * 100).toFixed(2);
+                    //             resultsDataElectionResult.Contest[i].Choice.choiceVotePercent = choiceVotePercent
+                    //         } else resultsDataElectionResult.Contest[i].Choice.choiceVotePercent = 0
+                    //     }
+                    //     if (resultsDataElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                    //         resultsDataElectionResult.Contest[i].Choice['@party'] = 'DEM'
+                    //     } else if (resultsDataElectionResult.Contest[i]['@text'].includes('Republican')) {
+                    //         resultsDataElectionResult.Contest[i].Choice['@party'] = 'REP'
+                    //     } else resultsDataElectionResult.Contest[i].Choice['@party'] = 'OTH';
+                    //     if (resultsDataElectionResult.Contest[i].Choice['@totalVotes'] != null) {
+                    //         resultsDataElectionResult.Contest[i].Choice['@totalVotes'] = numberWithCommas(resultsDataElectionResult.Contest[i].Choice['@totalVotes'])
+                    //     }
+                    // }
+
+                    // function sorting(votes) {
+                    //     return votes.sort((a, b) => b.V - a.V);
+                    // }
+                    //console.log(resultsData);
+
+                    //$('#election-results').html(template(resultsData));
+
+                }
+            )
+        })
+    }
+    </script>
+</body>
+
+</html>

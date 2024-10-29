@@ -1,0 +1,84 @@
+JSON structure:
+
+[
+  {
+    "race_name": "REPRESENTATIVE TO THE 116TH UNITED STATES CONGRESS - DISTRICT 1 - DEMOCRATIC PARTY",
+    "results": [
+      {
+        "choice_name": "Brian E. Arnold",
+        "choice_votes": 7535,
+        "choice_vote_percent": 69.3
+      },
+      {
+        "choice_name": "Dave Gruber",
+        "choice_votes": 12749,
+        "choice_vote_percent": 17.78
+      },
+      {
+        "choice_name": "Reid Hettich",
+        "choice_votes": 2694,
+        "choice_vote_percent": 3.76
+      },
+      {
+        "choice_name": "Allison Hiltz",
+        "choice_votes": 16126,
+        "choice_vote_percent": 22.49
+      },
+      {
+        "choice_name": "Tim Huffman",
+        "choice_votes": 11070,
+        "choice_vote_percent": 15.44
+      },
+      {
+        "choice_name": "Abel Laeke",
+        "choice_votes": 2709,
+        "choice_vote_percent": 3.78
+      },
+      {
+        "choice_name": "Tom Tobiassen",
+        "choice_votes": 12675,
+        "choice_vote_percent": 17.68
+      },
+      {
+        "choice_name": "Russ Wagner",
+        "choice_votes": 6152,
+        "choice_vote_percent": 8.58
+      }
+    ]
+  }
+]
+
+Example urls:
+
+2024 primary results
+
+--home page: https://results.enr.clarityelections.com/CO/119943/web.317647/#/summary
+--sum.json
+--https://results.enr.clarityelections.com/CO/121727/345027/json/sum.json
+
+----Araphoe County page: https://results.enr.clarityelections.com//CO/Arapahoe/119945/web.317647/#/?v=334157/
+----sum.json
+----https://results.enr.clarityelections.com/CO/Arapahoe/121729/344895/json/sum.json
+
+2022 general results
+
+--home page: https://results.enr.clarityelections.com/CO/115903/web.307039/#/summary
+--sum.json
+--https://results.enr.clarityelections.com/CO/115903/316199/json/sum.json
+
+----Araphoe County page: https://results.enr.clarityelections.com/CO/Arapahoe/115905/web.307039/#/summary?v=314515%2F
+----sum.json
+----https://results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/sum.json
+
+2020 general results
+
+--home page: https://results.enr.clarityelections.com/CO/105975/web.276603/#/summary
+--sum.json
+--https://results.enr.clarityelections.com//CO/105975/276916/json/sum.json
+
+----Arapahoe County page: https://results.enr.clarityelections.com//CO/105975/276916/json/sum.json
+----sum.json
+----https://results.enr.clarityelections.com//CO/Arapahoe/105977/273118/json/sum.json
+
+
+
