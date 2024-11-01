@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado County Presidential Election Results 2024 | The Denver Post</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
+    <!-- <script src="./js/statewide_results.js"></script> -->
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <div id="map-wrapper">
+        <div style="min-height:568px" id="datawrapper-vis-XimeE">
+            <script type="text/javascript" defer src="https://datawrapper.dwcdn.net/XimeE/embed.js" charset="utf-8" data-target="#datawrapper-vis-XimeE"></script><noscript><img src="https://datawrapper.dwcdn.net/XimeE/full.png" alt="Symbol map showing Colorado's contestial vote" /></noscript>
+        </div>
+    </div>
+    <hr>
+    <h1>Colorado county presidential results</h1>
+    <div class="legend-wrapper">
+        <div><span class="party-color-square DEM"></span><span class="legend-text">DEM</span><span class="party-color-square REP"></span><span class="legend-text">REP</span><span class="party-color-square OTH"></span><span class="legend-text">OTHER/NO PARTY</span></div>
+        <p class="timestamp">Results updated <span id="timestamp"></span></p>
+    </div>
+    <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->
+    <!-- Extras page for 2002 primary results: https://extras.denverpost.com/app/elections/2022/primary-election-results/clarity.html -->
+    <div id="election-results"></div>
+    <!-- <script id="results-template" type="text/x-handlebars-template">
+        {{#each Choice}}
+            {{#if VoteType.County.length}}
+                {{#each VoteType.County}}
+                    <tr><td>{{[@name]}}</td><td>{{[@votes]}}</td></tr>
+                {{/each}}
+            {{/if}}
+        {{/each}}
+    </script> -->
+    <script id="results-template" type="text/x-handlebars-template">
+        {{#each contestArray}}
+        <table class="race-table">
+            <h2>{{county}}</h2>
+            {{#if choiceArray.length}}
+                {{#eachByVotePct choiceArray}}
+                    <tr>
+                        <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                        <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+                        <td>{{votes}}
+                    </tr>
+                {{/eachByVotePct}}
+            {{/if}}
+        {{/each}}
+    </table>
+    </script>
+    <!-- <script id="results-template" type="text/x-handlebars-template">
+        {{#each Contest}}
+      <table class="race-table">
+        <span class="race-name">{{'@text'}}</span>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script> -->
+    <script>
+    // Handlebars helper function to sort results
+    Handlebars.registerHelper('eachByVotePct', function(context, options) {
+        var output = '';
+        var contextSorted = context.concat()
+            .sort(function(a, b) { return b.choiceVotePercent - a.choiceVotePercent });
+        for (var i = 0, j = contextSorted.length; i < j; i++) {
+            output += options.fn(contextSorted[i]);
+        }
+        return output;
+    });
+
+    // Function to add commas to numbers
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    $(document).ready(function() {
+        var template = Handlebars.compile($("#results-template").html());
+
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/en/summary.json';
+        //var data_url = 'https://results.enr.clarityelections.com/CO/122598/346692/json/en/summary.json';
+        var data_url = './data/election_data_2020.json';
+
+        $.getJSON(data_url,
+            function(data) {
+
+                // Use array index to determine race data :: RACES WITHIN ONLY ONE COUNTY WILL NOT POPULATE SINCE ORIGINAL DATA IS NOT IN AN ARRAY
+                var contest = data.ElectionResult.Contest[0];
+
+                // var timestamp = document.getElementById('timestamp');
+                // timestamp.innerHTML = (data.ElectionResult.Timestamp).slice(0, -4);
+
+
+                let countyArray = [];
+                for (i = 0; i < 1; i++) {
+                    for (j = 0; j < contest.Choice[i].VoteType.County.length; j++) {
+                        let countyObject = {};
+                        countyObject.county = contest.Choice[i].VoteType.County[j]['@name'];
+                        countyArray.push(countyObject);
+                    }
+                }
+                //console.log(countyArray[0]);
+
+
+                // PRETTY CLOSE TO WORKING
+                // for (i = 0; i < countyArray.length; i++) {
+                //     let choiceArray = [];
+                //     for (j = 0; j < contest.Choice.length; j++) {
+                //     let choiceObject = {};
+                //         choiceObject.name = contest.Choice[j]['@text'];
+                //         choiceObject.votes = contest.Choice[j].VoteType.County[i]['@votes'];
+                //         choiceArray.push(choiceObject)
+                //     }
+                //     console.log(choiceArray);
+                // }
+
+                let contestObject = {};
+                let contestArray = [];
+                for (i = 0; i < countyArray.length; i++) {
+                    //let sumCountyVotes = 0;
+                    let choiceArray = [];
+                    let choiceObject = {};
+                    for (j = 0; j < contest.Choice.length; j++) {
+                        //sumCountyVotes += parseInt(contest.Choice[j].VoteType.County[i]['@votes']);
+                        choiceObject.county = countyArray[i].county;
+                        choiceArray.push({
+                            name: contest.Choice[j]['@text'],
+                            party: contest.Choice[j]['@party'],
+                            votes: contest.Choice[j].VoteType.County[i]['@votes']
+                        })
+                    }
+                    //choiceObject.sumCountyVotes = sumCountyVotes;
+                    choiceObject.choiceArray = choiceArray;
+                    contestArray.push(choiceObject);
+                }
+                contestObject.contestArray = contestArray;
+                //console.log(contestObject);
+                // for (i = 0; i < contestArray.length; i++) {
+                //     let pctVotes = 0;
+                //     for (j = 0; j < contestArray[i].choiceArray.length; j++) {
+                //         pctVotes = contestArray[i].choiceArray[j].votes / contestArray[i].sumCountyVotes
+                //         console.log(pctVotes);
+                //     }
+                // }
+
+                // Calculate candidate's percentage of county votes
+                for (i = 0; i < contestObject.contestArray.length; i++) {
+                    var allVotes = [];
+                    var sumCountyVotes;
+                    var choiceVotePercent;
+                    for (let j = 0; j < contestObject.contestArray[i].choiceArray.length; j++) {
+                        allVotes.push(Number(contestObject.contestArray[i].choiceArray[j].votes))
+
+                        // Sum all candidates' votes
+                        sumCountyVotes = allVotes.reduce((pv, cv) => pv + cv, 0);
+                        for (let j = 0; j < contestObject.contestArray[i].choiceArray.length; j++) {
+                            contestObject.contestArray[i].sumCountyVotes = sumCountyVotes;
+
+                            // Get candidate vote percentage but show a zero instead of NaN if no results
+                            if (contestObject.contestArray[i].sumCountyVotes != 0) {
+                                choiceVotePercent = ((contestObject.contestArray[i].choiceArray[j].votes / sumCountyVotes) * 100).toFixed(2);
+                                contestObject.contestArray[i].choiceArray[j].choiceVotePercent = choiceVotePercent
+                            } else contestObject.contestArray[i].choiceArray[j].choiceVotePercent = 0
+                        }
+                        if (contestObject.contestArray[i].choiceArray[j].party != 'DEM' && contestObject.contestArray[i].choiceArray[j].party != 'REP') {
+                            contestObject.contestArray[i].choiceArray[j].party = 'OTH'
+                        }
+                        if (contestObject.contestArray[i].choiceArray[j].name === 'Yes' || contestObject.contestArray[i].choiceArray[j].name === 'Yes/For') {
+                            contestObject.contestArray[i].choiceArray[j].party = 'YES'
+                        } else if (contestObject.contestArray[i].choiceArray[j].name === 'No' || contestObject.contestArray[i].choiceArray[j].name === 'No/Against') {
+                            contestObject.contestArray[i].choiceArray[j].party = 'NO'
+                        }
+                    }
+                    // Add commas to vote counts
+                    for (let j = 0; j < contestObject.contestArray[i].choiceArray.length; j++) {
+                        if (contestObject.contestArray[i].choiceArray[j].votes != null) {
+                            contestObject.contestArray[i].choiceArray[j].votes = numberWithCommas(contestObject.contestArray[i].choiceArray[j].votes)
+                        }
+                    }
+                }
+
+                let countyLatLon = [{
+                        "county": "Adams",
+                        "latitude": 39.874325,
+                        "longitude": -104.331872
+                    },
+                    {
+                        "county": "Alamosa",
+                        "latitude": 37.568442,
+                        "longitude": -105.788041
+                    },
+                    {
+                        "county": "Arapahoe",
+                        "latitude": 39.644632,
+                        "longitude": -104.331733
+                    },
+                    {
+                        "county": "Archuleta",
+                        "latitude": 37.202395,
+                        "longitude": -107.050863
+                    },
+                    {
+                        "county": "Baca",
+                        "latitude": 37.303144,
+                        "longitude": -102.535457
+                    },
+                    {
+                        "county": "Bent",
+                        "latitude": 37.931891,
+                        "longitude": -103.077584
+                    },
+                    {
+                        "county": "Boulder",
+                        "latitude": 40.094826,
+                        "longitude": -105.398382
+                    },
+                    {
+                        "county": "Broomfield",
+                        "latitude": 39.953383,
+                        "longitude": -105.052125
+                    },
+                    {
+                        "county": "Chaffee",
+                        "latitude": 38.738246,
+                        "longitude": -106.316972
+                    },
+                    {
+                        "county": "Cheyenne",
+                        "latitude": 38.835387,
+                        "longitude": -102.604585
+                    },
+                    {
+                        "county": "Clear Creek",
+                        "latitude": 39.689403,
+                        "longitude": -105.670791
+                    },
+                    {
+                        "county": "Conejos",
+                        "latitude": 37.213407,
+                        "longitude": -106.176447
+                    },
+                    {
+                        "county": "Costilla",
+                        "latitude": 37.277547,
+                        "longitude": -105.42894
+                    },
+                    {
+                        "county": "Crowley",
+                        "latitude": 38.321956,
+                        "longitude": -103.787562
+                    },
+                    {
+                        "county": "Custer",
+                        "latitude": 38.101994,
+                        "longitude": -105.373515
+                    },
+                    {
+                        "county": "Delta",
+                        "latitude": 38.861756,
+                        "longitude": -107.864757
+                    },
+                    {
+                        "county": "Denver",
+                        "latitude": 39.761849,
+                        "longitude": -104.880625
+                    },
+                    {
+                        "county": "Dolores",
+                        "latitude": 37.747602,
+                        "longitude": -108.530383
+                    },
+                    {
+                        "county": "Douglas",
+                        "latitude": 39.326435,
+                        "longitude": -104.926199
+                    },
+                    {
+                        "county": "Eagle",
+                        "latitude": 39.630638,
+                        "longitude": -106.692944
+                    },
+                    {
+                        "county": "El Paso",
+                        "latitude": 38.827383,
+                        "longitude": -104.527472
+                    },
+                    {
+                        "county": "Elbert",
+                        "latitude": 39.310817,
+                        "longitude": -104.117928
+                    },
+                    {
+                        "county": "Fremont",
+                        "latitude": 38.455658,
+                        "longitude": -105.421438
+                    },
+                    {
+                        "county": "Garfield",
+                        "latitude": 39.599352,
+                        "longitude": -107.90978
+                    },
+                    {
+                        "county": "Gilpin",
+                        "latitude": 39.861082,
+                        "longitude": -105.528947
+                    },
+                    {
+                        "county": "Grand",
+                        "latitude": 40.123289,
+                        "longitude": -106.095876
+                    },
+                    {
+                        "county": "Gunnison",
+                        "latitude": 38.669679,
+                        "longitude": -107.078108
+                    },
+                    {
+                        "county": "Hinsdale",
+                        "latitude": 37.811625,
+                        "longitude": -107.383405
+                    },
+                    {
+                        "county": "Huerfano",
+                        "latitude": 37.687815,
+                        "longitude": -104.959928
+                    },
+                    {
+                        "county": "Jackson",
+                        "latitude": 40.663432,
+                        "longitude": -106.329248
+                    },
+                    {
+                        "county": "Jefferson",
+                        "latitude": 39.58646,
+                        "longitude": -105.245601
+                    },
+                    {
+                        "county": "Kiowa",
+                        "latitude": 38.388466,
+                        "longitude": -102.75621
+                    },
+                    {
+                        "county": "Kit Carson",
+                        "latitude": 39.30534,
+                        "longitude": -102.603023
+                    },
+                    {
+                        "county": "La Plata",
+                        "latitude": 37.287367,
+                        "longitude": -107.839718
+                    },
+                    {
+                        "county": "Lake",
+                        "latitude": 39.204316,
+                        "longitude": -106.349696
+                    },
+                    {
+                        "county": "Larimer",
+                        "latitude": 40.663091,
+                        "longitude": -105.482131
+                    },
+                    {
+                        "county": "Las Animas",
+                        "latitude": 37.318831,
+                        "longitude": -104.04411
+                    },
+                    {
+                        "county": "Lincoln",
+                        "latitude": 38.99374,
+                        "longitude": -103.507555
+                    },
+                    {
+                        "county": "Logan",
+                        "latitude": 40.728091,
+                        "longitude": -103.090464
+                    },
+                    {
+                        "county": "Mesa",
+                        "latitude": 39.019492,
+                        "longitude": -108.461837
+                    },
+                    {
+                        "county": "Mineral",
+                        "latitude": 37.651478,
+                        "longitude": -106.9323
+                    },
+                    {
+                        "county": "Moffat",
+                        "latitude": 40.573984,
+                        "longitude": -108.204521
+                    },
+                    {
+                        "county": "Montezuma",
+                        "latitude": 37.338025,
+                        "longitude": -108.595786
+                    },
+                    {
+                        "county": "Montrose",
+                        "latitude": 38.413427,
+                        "longitude": -108.263042
+                    },
+                    {
+                        "county": "Morgan",
+                        "latitude": 40.262354,
+                        "longitude": -103.807092
+                    },
+                    {
+                        "county": "Otero",
+                        "latitude": 37.88417,
+                        "longitude": -103.72126
+                    },
+                    {
+                        "county": "Ouray",
+                        "latitude": 38.1506,
+                        "longitude": -107.767133
+                    },
+                    {
+                        "county": "Park",
+                        "latitude": 39.118914,
+                        "longitude": -105.717648
+                    },
+                    {
+                        "county": "Phillips",
+                        "latitude": 40.594712,
+                        "longitude": -102.345105
+                    },
+                    {
+                        "county": "Pitkin",
+                        "latitude": 39.217533,
+                        "longitude": -106.915943
+                    },
+                    {
+                        "county": "Prowers",
+                        "latitude": 37.958181,
+                        "longitude": -102.392161
+                    },
+                    {
+                        "county": "Pueblo",
+                        "latitude": 38.170658,
+                        "longitude": -104.489893
+                    },
+                    {
+                        "county": "Rio Blanco",
+                        "latitude": 39.972606,
+                        "longitude": -108.200685
+                    },
+                    {
+                        "county": "Rio Grande",
+                        "latitude": 37.485763,
+                        "longitude": -106.453214
+                    },
+                    {
+                        "county": "Routt",
+                        "latitude": 40.48316,
+                        "longitude": -106.985289
+                    },
+                    {
+                        "county": "Saguache",
+                        "latitude": 38.033952,
+                        "longitude": -106.246675
+                    },
+                    {
+                        "county": "San Juan",
+                        "latitude": 37.781075,
+                        "longitude": -107.670257
+                    },
+                    {
+                        "county": "San Miguel",
+                        "latitude": 38.009374,
+                        "longitude": -108.427326
+                    },
+                    {
+                        "county": "Sedgwick",
+                        "latitude": 40.871568,
+                        "longitude": -102.355358
+                    },
+                    {
+                        "county": "Summit",
+                        "latitude": 39.621023,
+                        "longitude": -106.137555
+                    },
+                    {
+                        "county": "Teller",
+                        "latitude": 38.871994,
+                        "longitude": -105.182552
+                    },
+                    {
+                        "county": "Washington",
+                        "latitude": 39.965413,
+                        "longitude": -103.209605
+                    },
+                    {
+                        "county": "Weld",
+                        "latitude": 40.555794,
+                        "longitude": -104.383649
+                    },
+                    {
+                        "county": "Yuma",
+                        "latitude": 40.000631,
+                        "longitude": -102.422649
+                    }
+                ];
+
+                let mapVotesArray = [];
+                let voteDiffPct;
+                for (i = 0; i < contestObject.contestArray.length; i++) {
+                    mapVotesArray.push({
+                        county: countyLatLon[i].county,
+                        latitude: countyLatLon[i].latitude,
+                        longitude: countyLatLon[i].longitude,
+                        totalCountyVotes: contestObject.contestArray[i].sumCountyVotes,
+                        demPct: parseFloat(contestObject.contestArray[i].choiceArray[0].choiceVotePercent),
+                        demVotes: parseFloat(contestObject.contestArray[i].choiceArray[0].votes.replace(/,/g, '')),
+                        repPct: parseFloat(contestObject.contestArray[i].choiceArray[1].choiceVotePercent),
+                        repVotes: parseFloat(contestObject.contestArray[i].choiceArray[1].votes.replace(/,/g, ''))
+                    })
+                }
+                console.log(mapVotesArray);
+
+
+
+                // for (i = 0; i < contestObject.contestArray.length; i++) {
+                //     let sumVotes = 0;
+                //     for (j = 0; j < contestObject.contestArray[i].choiceArray.length; j++) {
+                //         sumVotes += parseInt(contestObject.contestArray[i].choiceArray[j].votes);
+                //     }
+                //     contestObject.contestArray[i].push(sumVotes);
+                // }
+
+                console.log(contestObject);
+                $('#election-results').html(template(contestObject));
+
+
+                // let choiceArray = [];
+                // let choiceObject = {};
+                // for (i = 0; i < countyArray.length; i++) {
+                //         choiceObject.county = countyArray[i].county;
+                //     for (j = 0; j < contest.Choice.length; j++) {
+                //         choiceArray.push({
+                //             name: contest.Choice[j]['@text']
+                //     })
+                // }
+
+
+                // [   {county: 'Adams', choice: [ { name: Kamala, votes: 5 }, { name: Trump, votes: 5 } ]}
+                //     {county: 'Arapahoe', choice: [ { name: Kamala, votes: 5 }, { name: Trump, votes: 5 } ]}
+                // ]
+
+
+
+
+
+
+                var timestamp = document.getElementById('timestamp');
+                timestamp.innerHTML = (data.ElectionResult.Timestamp).slice(0, -4);
+
+                for (let i = 0; i < data.ElectionResult.Contest.length; i++) {
+
+                    // Change some race phrasing
+                    if (data.ElectionResult.Contest[i]['@text'].includes('118th United States Congress') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Representative to the 118th United States Congress', 'U.S. Representative')
+                    } else if (data.ElectionResult.Contest[i]['@text'].includes('119th United States Congress') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Representative to the 119th United States Congress', 'U.S. Representative')
+                    }
+
+                    // Check if the Choice is an array (multiple candidates) instead of an object (single candidate)
+                    if (Object.prototype.toString.call(data.ElectionResult.Contest[i].Choice) === '[object Array]') {
+                        var allVotes = [];
+                        var sumChoiceVotes;
+                        var choiceVotePercent;
+                        for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                            allVotes.push(Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']))
+
+                            // Sum all candidates' votes
+                            sumChoiceVotes = allVotes.reduce((pv, cv) => pv + cv, 0);
+                            for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                                data.ElectionResult.Contest[i].Choice[j].totalRaceVotes = sumChoiceVotes;
+
+                                // Get candidate vote percentage but show a zero instead of NaN if no results
+                                if (data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] != 0) {
+                                    choiceVotePercent = ((Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']) / sumChoiceVotes) * 100).toFixed(2);
+                                    data.ElectionResult.Contest[i].Choice[j].choiceVotePercent = choiceVotePercent
+                                } else data.ElectionResult.Contest[i].Choice[j].choiceVotePercent = 0
+                            }
+
+                            // Add party to candidate
+                            // if (data.ElectionResult.Contest[i]['@text'].includes('Democratic')) {
+                            //     data.ElectionResult.Contest[i].Choice[j]['@party'] = 'DEM'
+                            // } else if (data.ElectionResult.Contest[i]['@text'].includes('Republican')) {
+                            //     data.ElectionResult.Contest[i].Choice[j]['@party'] = 'REP'
+                            // };
+                            if (data.ElectionResult.Contest[i].Choice[j]['@party'] != 'DEM' && data.ElectionResult.Contest[i].Choice[j]['@party'] != 'REP') {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'OTH'
+                            }
+                            if (data.ElectionResult.Contest[i].Choice[j]['@text'] === 'Yes' || data.ElectionResult.Contest[i].Choice[j]['@text'] === 'Yes/For') {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'YES'
+                            } else if (data.ElectionResult.Contest[i].Choice[j]['@text'] === 'No' || data.ElectionResult.Contest[i].Choice[j]['@text'] === 'No/Against') {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'NO'
+                            }
+                        }
+
+                        // Add commas to vote counts
+                        for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                            if (data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] != null) {
+                                data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] = numberWithCommas(data.ElectionResult.Contest[i].Choice[j]['@totalVotes'])
+                            }
+                        }
+                    }
+                }
+
+                //$('#election-results').html(template(contest));
+                console.log(contest);
+            }
+        )
+    });
+    </script>
+</body>
+
+</html>

@@ -14,12 +14,17 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     getDropdownData();
+// }, false);
+
 function getDropdownData() {
     $(document).ready(function() {
 
         // Get county name from dropdown text for county header
         let sel = document.getElementById('county-dropdown');
-        let countyName = sel.options[sel.selectedIndex].text;
+        countyName = sel.options[sel.selectedIndex].text;
         document.getElementById('county-name').innerHTML = countyName + ' County';
 
         let template = Handlebars.compile($("#results-template").html());
@@ -40,7 +45,6 @@ function getDropdownData() {
         //let data_url = 'https://results.enr.clarityelections.com/CO/Douglas/115923/316133/json/sum.json';
         // Dolores 2022 general
         //let data_url = 'https://results.enr.clarityelections.com/CO/Dolores/115922/315046/json/sum.json';
-        //let data_url = myVariable;
 
         // Construct data_url from dropdown value
         let data_url = './data/' + document.getElementById('county-dropdown').value + '_data.json';

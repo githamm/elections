@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado General Election Results 2024 | The Denver Post</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
+    <!-- <script src="./js/statewide_results.js"></script> -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+    <div class="nav-wrapper">
+        <p><strong>GO TO </strong> <a href="#federal-offices">Federal offices</a> &bull; <a href="#ballot-measures">State ballot issues</a> &bull; <a href="#state-offices">State/regional offices</a> &bull; <a href="#local-ballot-measures">Multi-county contests</a> &bull; <a href="#judges">Judges</a> &bull; <a href="#">County results</a></p>
+    </div>
+    <div class="legend-wrapper">
+        <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div>
+        <p class="timestamp">Results updated <span id="timestamp"></span></p>
+    </div>
+    <h2 class="section-header">Federal offices</h2>
+    <div id="federal-offices"></div>
+    <h2 class="section-header">State ballot measures</h2>
+    <div id="ballot-measures"></div>
+    <h2 class="section-header">State and regional offices</h2>
+    <div id="state-offices"></div>
+    <h2 class="section-header">Local multi-county contests</h2>
+    <div id="local-ballot-measures"></div>
+    <h2 class="section-header">Judges</h2>
+    <div id="judges"></div>
+    <script id="federal-offices-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="ballot-measures-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="state-offices-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="local-ballot-measures-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="judges-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <!-- Original template -->
+    <!-- <script id="results-template" type="text/x-handlebars-template">
+        {{#each Contest}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script> -->
+    <script>
+    // Handlebars helper function to sort results
+    Handlebars.registerHelper('eachByVotePct', function(context, options) {
+        var output = '';
+        var contextSorted = context.concat()
+            .sort(function(a, b) { return b.choiceVotePercent - a.choiceVotePercent });
+        for (var i = 0, j = contextSorted.length; i < j; i++) {
+            output += options.fn(contextSorted[i]);
+        }
+        return output;
+    });
+
+    // Function to add commas to numbers
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    $(document).ready(function() {
+        // Compile Handlebars templates
+        let federalOfficesTemplate = Handlebars.compile($("#federal-offices-template").html());
+        let ballotMeasuresTemplate = Handlebars.compile($("#ballot-measures-template").html());
+        let stateOfficesTemplate = Handlebars.compile($("#state-offices-template").html());
+        let localBallotMeasuresTemplate = Handlebars.compile($("#local-ballot-measures-template").html());
+        let judgesTemplate = Handlebars.compile($("#judges-template").html());
+
+        //var template = Handlebars.compile($("#results-template").html()); // Original template
+
+        //var data_url = 'https://results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/en/summary.json';
+        //var data_url = 'https://results.enr.clarityelections.com/CO/122598/346692/json/en/summary.json';
+        //var data_url = '../data/election_data.json';
+        var data_url = '../data/election_data.json';
+
+        $.getJSON(data_url,
+            function(data) {
+
+                var timestamp = document.getElementById('timestamp');
+                timestamp.innerHTML = (data.ElectionResult.Timestamp).slice(0, -4);
+
+                for (let i = 0; i < data.ElectionResult.Contest.length; i++) {
+
+                    // Change some race phrasing
+                    if (data.ElectionResult.Contest[i]['@text'] === 'Presidential Electors') {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Presidential Electors', 'U.S. President')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('119th United States Congress') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Representative to the 119th United States Congress', 'U.S. Representative')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('State Board of Education Member - Congressional') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('State Board of Education Member - Congressional', 'State Board of Education -')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'] === 'Regent of the University of Colorado - At Large') {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Regent of the University of Colorado', 'CU Regent')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Regent of the University of Colorado - Congressional') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Regent of the University of Colorado - Congressional', 'CU Regent -')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Regional Transportation District') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Regional Transportation District', 'RTD')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Amendment G (CONSTITUTIONAL)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Amendment G (CONSTITUTIONAL)', 'Amendment G: Extend homestead property tax exemption')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Amendment H (CONSTITUTIONAL)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Amendment H (CONSTITUTIONAL)', 'Amendment H: Oversight for judges')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Amendment I (CONSTITUTIONAL)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Amendment I (CONSTITUTIONAL)', 'Amendment I: Deny bail to murder defendants')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Amendment J (CONSTITUTIONAL)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Amendment J (CONSTITUTIONAL)', 'Amendment J: Repeal defunct same-sex marriage ban')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Amendment K (CONSTITUTIONAL)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Amendment K (CONSTITUTIONAL)', 'Amendment K: Tighten election deadlines')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Amendment 79 (CONSTITUTIONAL)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Amendment 79 (CONSTITUTIONAL)', 'Amendment 79: Add abortion access to Constitution')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Amendment 80 (CONSTITUTIONAL)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Amendment 80 (CONSTITUTIONAL)', 'Amendment 80: Add school choice to Constitution')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Proposition JJ (STATUTORY)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Proposition JJ (STATUTORY)', 'Proposition JJ: Keep sports betting tax revenue')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Proposition KK (STATUTORY)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Proposition KK (STATUTORY)', 'Proposition KK: Tax gun, ammunition sales')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Proposition 127 (STATUTORY)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Proposition 127 (STATUTORY)', 'Proposition 127: Ban mountain lion, bobcat hunting')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Proposition 128 (STATUTORY)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Proposition 128 (STATUTORY)', 'Proposition 128: Prison sentence reform')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Proposition 129 (STATUTORY)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Proposition 129 (STATUTORY)', 'Proposition 129: New veterinary position')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Proposition 130 (STATUTORY)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Proposition 130 (STATUTORY)', 'Proposition 130: Law enforcement fund')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Proposition 131 (STATUTORY)') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Proposition 131 (STATUTORY)', 'Proposition 131: Ranked-choice voting in elections')
+                    }
+                    if (data.ElectionResult.Contest[i]['@text'].includes('Adams-Arapahoe School District 28J') == true) {
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Adams-Arapahoe School District 28J', 'Aurora Public Schools')
+                    }
+
+                    if (data.ElectionResult.Contest[i]['@precinctsReportingPercent']) {
+                        data.ElectionResult.Contest[i]['@precinctsReportingPercent'] = Math.round(data.ElectionResult.Contest[i]['@precinctsReportingPercent']);
+                    }
+
+                    // Check if the Choice is an array (multiple candidates) instead of an object (single candidate)
+                    if (Object.prototype.toString.call(data.ElectionResult.Contest[i].Choice) === '[object Array]') {
+                        var allVotes = [];
+                        var sumChoiceVotes;
+                        var choiceVotePercent;
+                        for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                            allVotes.push(Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']))
+
+                            // Sum all candidates' votes
+                            sumChoiceVotes = allVotes.reduce((pv, cv) => pv + cv, 0);
+                            for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                                data.ElectionResult.Contest[i].Choice[j].totalRaceVotes = sumChoiceVotes;
+
+                                // Get candidate vote percentage but show a zero instead of NaN if no results
+                                if (data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] != 0) {
+                                    choiceVotePercent = ((Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']) / sumChoiceVotes) * 100).toFixed(2);
+                                    data.ElectionResult.Contest[i].Choice[j].choiceVotePercent = choiceVotePercent
+                                } else data.ElectionResult.Contest[i].Choice[j].choiceVotePercent = 0
+                            }
+
+                            // Add party to candidate
+                            if (data.ElectionResult.Contest[i].Choice[j]['@party'] != 'DEM' && data.ElectionResult.Contest[i].Choice[j]['@party'] != 'REP') {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'OTH'
+                            }
+                            if (data.ElectionResult.Contest[i].Choice[j]['@text'] === 'Yes' || data.ElectionResult.Contest[i].Choice[j]['@text'] === 'Yes/For') {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'YES'
+                            } else if (data.ElectionResult.Contest[i].Choice[j]['@text'] === 'No' || data.ElectionResult.Contest[i].Choice[j]['@text'] === 'No/Against') {
+                                data.ElectionResult.Contest[i].Choice[j]['@party'] = 'NO'
+                            }
+                        }
+
+                        // Add commas to vote counts
+                        for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
+                            if (data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] != null) {
+                                data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] = numberWithCommas(data.ElectionResult.Contest[i].Choice[j]['@totalVotes'])
+                            }
+                        }
+
+
+                    }
+
+                    // If only one candidate (object rather than array) do same as above
+                    else {
+                        data.ElectionResult.Contest[i].Choice.totalRaceVotes = data.ElectionResult.Contest[i].Choice['@totalVotes'];
+                        if (data.ElectionResult.Contest[i].Choice['@totalVotes'] != 0) {
+                            choiceVotePercent = ((Number(data.ElectionResult.Contest[i].Choice['@totalVotes']) / Number(data.ElectionResult.Contest[i].Choice['@totalVotes'])) * 100).toFixed(2);
+                            data.ElectionResult.Contest[i].Choice.choiceVotePercent = choiceVotePercent
+                        } else data.ElectionResult.Contest[i].Choice.choiceVotePercent = 0
+                    }
+
+                    // Add party to candidate
+                    if (data.ElectionResult.Contest[i].Choice['@party'] != 'DEM' && data.ElectionResult.Contest[i].Choice['@party'] != 'REP') {
+                        data.ElectionResult.Contest[i].Choice['@party'] = 'OTH'
+                    }
+
+                    // Add commas to vote counts
+                    if (data.ElectionResult.Contest[i].Choice['@totalVotes'] != null) {
+                        data.ElectionResult.Contest[i].Choice['@totalVotes'] = numberWithCommas(data.ElectionResult.Contest[i].Choice['@totalVotes'])
+                    }
+                }
+
+                // Group races into their own arrays
+                federalOfficesArray = data.ElectionResult.Contest.filter(function(el) { //9
+                    return el['@text'].includes('U.S. President') ||
+                        el['@text'].includes('U.S. Representative')
+                });
+                ballotMeasuresArray = data.ElectionResult.Contest.filter(function(el) { //14
+                    return el['@text'].includes('Amendment G') ||
+                        el['@text'].includes('Amendment H') ||
+                        el['@text'].includes('Amendment I') ||
+                        el['@text'].includes('Amendment J') ||
+                        el['@text'].includes('Amendment K') ||
+                        el['@text'].includes('Amendment 79') ||
+                        el['@text'].includes('Amendment 80') ||
+                        el['@text'].includes('Proposition JJ') ||
+                        el['@text'].includes('Proposition KK') ||
+                        el['@text'].includes('Proposition 127') ||
+                        el['@text'].includes('Proposition 128') ||
+                        el['@text'].includes('Proposition 129') ||
+                        el['@text'].includes('Proposition 130') ||
+                        el['@text'].includes('Proposition 131')
+                });
+                stateOfficesArray = data.ElectionResult.Contest.filter(function(el) { //121
+                    return el['@text'].includes('State Board of Education') ||
+                        el['@text'].includes('CU Regent') ||
+                        el['@text'].includes('State Senator') ||
+                        el['@text'].includes('State Representative') ||
+                        el['@text'].includes('District Attorney') ||
+                        el['@text'].includes('RTD Director')
+                });
+
+                localBallotMeasuresArray = data.ElectionResult.Contest.filter(function(el) { //35
+                    return el['@text'].includes('Aurora') ||
+                        el['@text'].includes('Littleton') ||
+                        el['@text'].includes('Longmont') ||
+                        el['@text'].includes('Westminster') ||
+                        el['@text'].includes('Erie') ||
+                        el['@text'].includes('School') ||
+                        el['@text'].includes('Fire') ||
+                        el['@text'].includes('Water') ||
+                        el['@text'].includes('Health') ||
+                        el['@text'].includes('17th Judicial District Ballot Question 7B') ||
+                        el['@text'].includes('RTD Ballot') ||
+                        el['@text'].includes('San Miguel Authority for Regional Transportation (SMART) Ballot Issue 3A')
+                });
+
+                judgesArray = data.ElectionResult.Contest.filter(function(el) { // 116
+                    return el['@text'].includes('Justice') ||
+                        el['@text'].includes('Judge')
+                });
+
+                //console.log(allResultsArray);
+                console.log(federalOfficesArray);
+                console.log(ballotMeasuresArray);
+                console.log(stateOfficesArray);
+                console.log(localBallotMeasuresArray);
+                console.log(judgesArray);
+
+                //$('#election-results').html(template(data.ElectionResult)); // Original data object without race breakdowns
+                $('#federal-offices').html(federalOfficesTemplate(federalOfficesArray));
+                $('#ballot-measures').html(ballotMeasuresTemplate(ballotMeasuresArray));
+                $('#state-offices').html(stateOfficesTemplate(stateOfficesArray));
+                $('#local-ballot-measures').html(localBallotMeasuresTemplate(localBallotMeasuresArray));
+                $('#judges').html(judgesTemplate(judgesArray));
+
+                console.log(data.ElectionResult);
+            }
+        )
+    });
+    </script>
+</body>
+
+</html>

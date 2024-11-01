@@ -13,8 +13,11 @@
 </head>
 
 <body>
+    <div class="nav-wrapper">
+    <p><strong>GO TO:</strong> <a href="#">Statewide results</a></p>
+  </div>
     <fieldset>
-        <legend>Choose a county</legend>
+        <legend><strong>Choose a county</strong></legend>
         <select id="county-dropdown">
             <option value="Adams" selected>Adams</option>
             <option value="Alamosa">Alamosa</option>
@@ -84,7 +87,7 @@
         <button onclick="getDropdownData();">Get results</button>
     </fieldset>
     <div class="legend-wrapper">
-        <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER/NO PARTY</span></div>
+        <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div>
         <p class="timestamp">Results updated <span id="timestamp"></span></p>
     </div>
     <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->

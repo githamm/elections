@@ -26,10 +26,10 @@ $(document).ready(function() {
     let judgesTemplate = Handlebars.compile($("#judges-template").html());
 
     // Get data
-    //var data_url = 'https://results.enr.clarityelections.com//CO/105975/276916/json/sum.json'; //2020
+    var data_url = 'https://results.enr.clarityelections.com//CO/105975/276916/json/sum.json'; //2020
     //var data_url = 'https://results.enr.clarityelections.com/CO//115903/316199/json/sum.json'; //2022
     //var data_url = 'https://results.enr.clarityelections.com/CO/122598/348601/json/sum.json'; //2024
-    var data_url = './data/_data.json';
+    //var data_url = './data/_data.json';
 
     $.getJSON(data_url,
         function(data) {
@@ -195,7 +195,7 @@ $(document).ready(function() {
                         el.race.includes('RTD Director')
                 });
 
-                localBallotMeasuresArray = allResultsArray.filter(function(el) { //33
+                localBallotMeasuresArray = allResultsArray.filter(function(el) { //35
                     return el.race.includes('Aurora') ||
                         el.race.includes('Littleton') ||
                         el.race.includes('Longmont') ||
