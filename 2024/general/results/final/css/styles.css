@@ -31,9 +31,9 @@ body {
 .race-name {
     font-weight: 500;
     margin-top: 15px;
-    font-size: 1.2em;
+    font-size: 1.1em;
     display: inline-block;
-    line-height: 1.2;
+    line-height: 1.1;
     font-weight: bold;
 }
 
@@ -49,8 +49,8 @@ tr {
 
 td {
     padding: 5px 5px 5px 0;
-    font-size: .95em;
-    line-height: 1.2;
+    font-size: .9em;
+    line-height: 1.1;
 }
 
 .percent-vote {
@@ -90,7 +90,7 @@ td {
 }
 
 .NO {
-/*    background-color: rgba(189, 94, 189, .7);*/
+    /*    background-color: rgba(189, 94, 189, .7);*/
     background: rgba(251, 137, 84, .7);
 }
 
@@ -121,7 +121,7 @@ div.YES {
 }
 
 div.NO {
-/*    background: rgba(189, 94, 189, 1);*/
+    /*    background: rgba(189, 94, 189, 1);*/
     background: rgba(251, 137, 84, 1);
 }
 
@@ -135,7 +135,8 @@ div.NO {
     margin-right: 15px;
 }
 
-.timestamp, .precincts {
+.timestamp,
+.precincts {
     font-size: .8em;
     font-style: italic;
     color: #aaa;
@@ -175,7 +176,7 @@ select {
     cursor: pointer;
 }
 
-button {
+#county-button {
     height: 34px;
     /*width: 45px;
         border-radius: 50%;*/
@@ -188,14 +189,41 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+#county-button:hover {
     background: #760096;
 }
 
-button:active {
+#county-button:active {
     background: #eee;
     -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
     box-shadow: inset 0px 0px 5px #c1c1c1;
     outline: none;
+}
+
+.hidden {
+    display: none;
+}
+
+/*.toggle-button {
+    float: left;
+    color: #fff;
+    padding: 3px;
+    font-size: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+}*/
+
+i.fa {
+    font-size: 35px;
+    margin: -5px 0 0 5px;
+    float: left;
+    color: #fff;
+    padding: 3px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.fa:hover {
+    color: ;
 }

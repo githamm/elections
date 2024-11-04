@@ -14,7 +14,7 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-
+// Function to load data on page load
 // document.addEventListener('DOMContentLoaded', function() {
 //     getDropdownData();
 // }, false);
@@ -46,55 +46,64 @@ function getDropdownData() {
         // Dolores 2022 general
         //let data_url = 'https://results.enr.clarityelections.com/CO/Dolores/115922/315046/json/sum.json';
 
-        // Construct data_url from dropdown value
+        // Construct data_url and details_url from dropdown value
         let data_url = './data/' + document.getElementById('county-dropdown').value + '_data.json';
+        let details_url = './data/' + document.getElementById('county-dropdown').value + '_details.json';
 
-        $.getJSON(data_url,
-            function(data) {
-                let resultsObject = {};
-                let resultsArray = [];
+        $.getJSON(details_url,
+            function(details) {
+                // Get timestamp from county details file
+                let timestamp = document.getElementById('timestamp');
+                timestamp.innerHTML = (details.websiteupdatedat).slice(0, -4);
 
-                for (let i = 0; i < data.Contests.length; i++) {
-                    let results = {};
-                    let choices = [];
-                    for (let j = 0; j < data.Contests[i].P.length; j++) {
+                $.getJSON(data_url,
+                    function(data) {
+                        let resultsObject = {};
+                        let resultsArray = [];
 
-                        // Set party to "OTH" if not "DEM" or "REP"
-                        if (data.Contests[i].P[j] != 'DEM' && data.Contests[i].P[j] != 'REP') {
-                            data.Contests[i].P[j] = 'OTH'
+                        for (let i = 0; i < data.Contests.length; i++) {
+                            let results = {};
+                            let choices = [];
+                            for (let j = 0; j < data.Contests[i].P.length; j++) {
+
+                                // Set party to "OTH" if not "DEM" or "REP"
+                                if (data.Contests[i].P[j] != 'DEM' && data.Contests[i].P[j] != 'REP') {
+                                    data.Contests[i].P[j] = 'OTH'
+                                }
+                                // Change colors for Yes/No contests
+                                if (data.Contests[i].CH[j] === 'Yes' || data.Contests[i].CH[j] === 'Yes/For') {
+                                    data.Contests[i].P[j] = 'YES'
+                                } else if (data.Contests[i].CH[j] === 'No' || data.Contests[i].CH[j] === 'No/Against') {
+                                    data.Contests[i].P[j] = 'NO'
+                                }
+                                // Get candidate vote percentage but show a zero instead of NaN if no results
+                                if (data.Contests[i].V[j] != 0) {
+                                    data.Contests[i].PCT[j] = (data.Contests[i].PCT[j]).toFixed(2);
+                                    data.Contests[i].PCT[j] = data.Contests[i].PCT[j]
+                                } else data.Contests[i].PCT[j] = 0
+                                // Add commas to vote counts
+                                if (data.Contests[i].V[j] != null) {
+                                    data.Contests[i].V[j] = numberWithCommas(data.Contests[i].V[j])
+                                }
+
+                                results.race = data.Contests[i].C;
+                                choices.push({
+                                    //Race: data.Contests[0].C,
+                                    name: data.Contests[i].CH[j],
+                                    party: data.Contests[i].P[j],
+                                    votes: data.Contests[i].V[j],
+                                    pct: data.Contests[i].PCT[j]
+                                });
+                            }
+                            results.choices = choices;
+                            resultsArray.push(results);
                         }
-                        // Change colors for Yes/No contests
-                        if (data.Contests[i].CH[j] === 'Yes' || data.Contests[i].CH[j] === 'Yes/For') {
-                            data.Contests[i].P[j] = 'YES'
-                        } else if (data.Contests[i].CH[j] === 'No' || data.Contests[i].CH[j] === 'No/Against') {
-                            data.Contests[i].P[j] = 'NO'
-                        }
-                        // Get candidate vote percentage but show a zero instead of NaN if no results
-                        if (data.Contests[i].V[j] != 0) {
-                            data.Contests[i].PCT[j] = (data.Contests[i].PCT[j]).toFixed(2);
-                            data.Contests[i].PCT[j] = data.Contests[i].PCT[j]
-                        } else data.Contests[i].PCT[j] = 0
-                        // Add commas to vote counts
-                        if (data.Contests[i].V[j] != null) {
-                            data.Contests[i].V[j] = numberWithCommas(data.Contests[i].V[j])
-                        }
+                        resultsObject.resultsArray = resultsArray;
+                        console.log(data);
 
-                        results.race = data.Contests[i].C;
-                        choices.push({
-                            //Race: data.Contests[0].C,
-                            name: data.Contests[i].CH[j],
-                            party: data.Contests[i].P[j],
-                            votes: data.Contests[i].V[j],
-                            pct: data.Contests[i].PCT[j]
-                        });
+                        $('#election-results').html(template(resultsObject));
                     }
-                    results.choices = choices;
-                    resultsArray.push(results);
-                }
-                resultsObject.resultsArray = resultsArray;
-                console.log(data);
-
-                $('#election-results').html(template(resultsObject));
+                )
             }
         )
     })
