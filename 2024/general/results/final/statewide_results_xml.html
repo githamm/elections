@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado General Election Results 2024 | The Denver Post</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
+    <script src="./js/statewide_results_xml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <script src="./js/statewide_results.js"></script> -->
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <div class="nav-wrapper">
+        <p><strong>GO TO</strong> <a href="#">County results</a> &bull; <a href="#">Colorado presidential map</a></p>
+    </div>
+    <!-- <div id="map-wrapper">
+        <div style="min-height:568px" id="datawrapper-vis-XimeE">
+            <script type="text/javascript" defer src="https://datawrapper.dwcdn.net/XimeE/embed.js" charset="utf-8" data-target="#datawrapper-vis-XimeE"></script><noscript><img src="https://datawrapper.dwcdn.net/XimeE/full.png" alt="Symbol map showing Colorado's contestial vote" /></noscript>
+        </div>
+    </div>
+    <hr> -->
+    <div class="legend-wrapper">
+        <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div>
+        <p class="timestamp">Results updated <span id="timestamp"></span></p>
+    </div>
+    <h2 class="section-header">Federal offices</h2>
+    <div id="federal-offices"></div>
+    <h2 class="section-header">State ballot measures</h2>
+    <div id="ballot-measures"></div>
+    <h2 class="section-header">State and regional offices</h2>
+    <div id="state-offices"></div>
+    <h2 class="section-header">Local multi-county contests</h2>
+    <div id="local-contests"></div>
+    <h2 class="section-header">Judges</h2>
+    <div id="judges"></div>
+    <!-- <div id="all-races"></div> -->
+    <script id="federal-offices-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="ballot-measures-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="state-offices-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="local-contests-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <script id="judges-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script>
+    <!-- Template for all races with no sections -->
+    <!--   <script id="all-races-template" type="text/x-handlebars-template">
+        {{#each this}}
+    <table class="race-table">
+      <h2 class="race-name">{{'@text'}}</h2>
+      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+        {{#if Choice.length }}
+          {{#eachByVotePct Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/eachByVotePct}}
+        {{else}}
+          {{#with Choice}}
+            <tr>
+              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
+              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
+              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
+            </tr>
+          {{/with}}
+        {{/if}}
+      {{/each}}
+    </table>
+    </script> -->
+</body>
+
+</html>

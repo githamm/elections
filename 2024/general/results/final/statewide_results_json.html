@@ -8,7 +8,7 @@
     <title>Colorado General Election Statewide Results 2024 | The Denver Post</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
-    <script src="./js/statewide_results.js"></script>
+    <script src="./js/statewide_results_json.js"></script>
     <link rel="icon" type="image/x-icon" href="https://www.denverpost.com/wp-content/uploads/2016/05/cropped-DP_bug_denverpost.jpg?w=32">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./css/styles.css">
@@ -22,33 +22,16 @@
         <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div>
         <p class="timestamp">Results updated <span id="timestamp"></span></p>
     </div>
-    <div>
-        <!-- <button onclick="toggleDiv('federal-offices')"></button> -->
-        <h2 class="section-header">Federal offices</h2>
-    </div>
+    <h2 class="section-header">Federal offices</h2>
     <div id="federal-offices"></div>
-    <div>
-        <div onclick="toggleDiv('ballot-measures')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">State ballot measures</h2>
-    </div>
-    <div class="hidden" id="ballot-measures"></div>
-    <div>
-        <div onclick="toggleDiv('state-offices')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">State and regional offices</h2>
-    </div>
-    <div class="hidden" id="state-offices"></div>
-    <div>
-        <div onclick="toggleDiv('local-ballot-measures')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">Local multi-county contests</h2>
-    </div>
-    <div class="hidden" id="local-ballot-measures"></div>
-    <!-- <h2 class="section-header">Local offices</h2>
-    <div id="local-offices"></div> -->
-    <div>
-        <div onclick="toggleDiv('judges')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">Judges</h2>
-    </div>
-    <div class="hidden" id="judges"></div>
+    <h2 class="section-header">State ballot measures</h2>
+    <div id="ballot-measures"></div>
+    <h2 class="section-header">State and regional offices</h2>
+    <div id="state-offices"></div>
+    <h2 class="section-header">Local multi-county contests</h2>
+    <div id="local-ballot-measures"></div>
+    <h2 class="section-header">Judges</h2>
+    <div id="judges"></div>
     <script id="federal-offices-template" type="text/x-handlebars-template">
         {{#each federalOfficesArray}}
           <table class="race-table">
@@ -113,22 +96,6 @@
           </table>
         {{/each}}
     </script>
-    <!-- <script id="local-offices-template" type="text/x-handlebars-template">
-        {{#each localOfficesArray}}
-          <table class="race-table">
-            <span class="race-name">{{race}}</span>
-            {{#if choices.length }}
-              {{#eachByVotePct choices}}
-                <tr>
-                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
-                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
-                  <td class="total-votes" style="width:20%">{{votes}}</td>
-                </tr>
-              {{/eachByVotePct}}
-            {{/if}}
-          </table>
-        {{/each}}
-    </script> -->
     <script id="judges-template" type="text/x-handlebars-template">
         {{#each judgesArray}}
           <table class="race-table">

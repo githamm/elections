@@ -8,7 +8,6 @@
     <title>Colorado County Presidential Election Results 2024 | The Denver Post</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
-    <!-- <script src="./js/statewide_results.js"></script> -->
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 
@@ -52,37 +51,13 @@
         {{/each}}
     </table>
     </script>
-    <!-- <script id="results-template" type="text/x-handlebars-template">
-        {{#each Contest}}
-      <table class="race-table">
-        <span class="race-name">{{'@text'}}</span>
-        {{#if Choice.length }}
-          {{#eachByVotePct Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/eachByVotePct}}
-        {{else}}
-          {{#with Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/with}}
-        {{/if}}
-      {{/each}}
-    </table>
-    </script> -->
     <script>
     // Handlebars helper function to sort results
     Handlebars.registerHelper('eachByVotePct', function(context, options) {
-        var output = '';
-        var contextSorted = context.concat()
+        let output = '';
+        let contextSorted = context.concat()
             .sort(function(a, b) { return b.choiceVotePercent - a.choiceVotePercent });
-        for (var i = 0, j = contextSorted.length; i < j; i++) {
+        for (let i = 0, j = contextSorted.length; i < j; i++) {
             output += options.fn(contextSorted[i]);
         }
         return output;
@@ -94,21 +69,20 @@
     }
 
     $(document).ready(function() {
-        var template = Handlebars.compile($("#results-template").html());
+        let template = Handlebars.compile($("#results-template").html());
 
-        //var data_url = 'https://results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/en/summary.json';
-        //var data_url = 'https://results.enr.clarityelections.com/CO/122598/346692/json/en/summary.json';
-        var data_url = './data/election_data.json';
+        //let data_url = 'https://results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/en/summary.json';
+        //let data_url = 'https://results.enr.clarityelections.com/CO/122598/346692/json/en/summary.json';
+        let data_url = './data/election_data.json';
 
         $.getJSON(data_url,
             function(data) {
 
                 // Use array index to determine race data :: RACES WITHIN ONLY ONE COUNTY WILL NOT POPULATE SINCE ORIGINAL DATA IS NOT IN AN ARRAY
-                var contest = data.ElectionResult.Contest[0];
+                let contest = data.ElectionResult.Contest[0];
 
-                // var timestamp = document.getElementById('timestamp');
+                // let timestamp = document.getElementById('timestamp');
                 // timestamp.innerHTML = (data.ElectionResult.Timestamp).slice(0, -4);
-
 
                 let countyArray = [];
                 for (i = 0; i < 1; i++) {
@@ -118,20 +92,6 @@
                         countyArray.push(countyObject);
                     }
                 }
-                //console.log(countyArray[0]);
-
-
-                // PRETTY CLOSE TO WORKING
-                // for (i = 0; i < countyArray.length; i++) {
-                //     let choiceArray = [];
-                //     for (j = 0; j < contest.Choice.length; j++) {
-                //     let choiceObject = {};
-                //         choiceObject.name = contest.Choice[j]['@text'];
-                //         choiceObject.votes = contest.Choice[j].VoteType.County[i]['@votes'];
-                //         choiceArray.push(choiceObject)
-                //     }
-                //     console.log(choiceArray);
-                // }
 
                 let contestObject = {};
                 let contestArray = [];
@@ -148,25 +108,16 @@
                             votes: contest.Choice[j].VoteType.County[i]['@votes']
                         })
                     }
-                    //choiceObject.sumCountyVotes = sumCountyVotes;
                     choiceObject.choiceArray = choiceArray;
                     contestArray.push(choiceObject);
                 }
                 contestObject.contestArray = contestArray;
-                //console.log(contestObject);
-                // for (i = 0; i < contestArray.length; i++) {
-                //     let pctVotes = 0;
-                //     for (j = 0; j < contestArray[i].choiceArray.length; j++) {
-                //         pctVotes = contestArray[i].choiceArray[j].votes / contestArray[i].sumCountyVotes
-                //         console.log(pctVotes);
-                //     }
-                // }
 
                 // Calculate candidate's percentage of county votes
                 for (i = 0; i < contestObject.contestArray.length; i++) {
-                    var allVotes = [];
-                    var sumCountyVotes;
-                    var choiceVotePercent;
+                    let allVotes = [];
+                    let sumCountyVotes;
+                    let choiceVotePercent;
                     for (let j = 0; j < contestObject.contestArray[i].choiceArray.length; j++) {
                         allVotes.push(Number(contestObject.contestArray[i].choiceArray[j].votes))
 
@@ -535,42 +486,9 @@
                     })
                 }
                 console.log(mapVotesArray);
-
-
-
-                // for (i = 0; i < contestObject.contestArray.length; i++) {
-                //     let sumVotes = 0;
-                //     for (j = 0; j < contestObject.contestArray[i].choiceArray.length; j++) {
-                //         sumVotes += parseInt(contestObject.contestArray[i].choiceArray[j].votes);
-                //     }
-                //     contestObject.contestArray[i].push(sumVotes);
-                // }
-
-                console.log(contestObject);
                 $('#election-results').html(template(contestObject));
 
-
-                // let choiceArray = [];
-                // let choiceObject = {};
-                // for (i = 0; i < countyArray.length; i++) {
-                //         choiceObject.county = countyArray[i].county;
-                //     for (j = 0; j < contest.Choice.length; j++) {
-                //         choiceArray.push({
-                //             name: contest.Choice[j]['@text']
-                //     })
-                // }
-
-
-                // [   {county: 'Adams', choice: [ { name: Kamala, votes: 5 }, { name: Trump, votes: 5 } ]}
-                //     {county: 'Arapahoe', choice: [ { name: Kamala, votes: 5 }, { name: Trump, votes: 5 } ]}
-                // ]
-
-
-
-
-
-
-                var timestamp = document.getElementById('timestamp');
+                let timestamp = document.getElementById('timestamp');
                 timestamp.innerHTML = (data.ElectionResult.Timestamp).slice(0, -4);
 
                 for (let i = 0; i < data.ElectionResult.Contest.length; i++) {
@@ -584,9 +502,9 @@
 
                     // Check if the Choice is an array (multiple candidates) instead of an object (single candidate)
                     if (Object.prototype.toString.call(data.ElectionResult.Contest[i].Choice) === '[object Array]') {
-                        var allVotes = [];
-                        var sumChoiceVotes;
-                        var choiceVotePercent;
+                        let allVotes = [];
+                        let sumChoiceVotes;
+                        let choiceVotePercent;
                         for (let j = 0; j < data.ElectionResult.Contest[i].Choice.length; j++) {
                             allVotes.push(Number(data.ElectionResult.Contest[i].Choice[j]['@totalVotes']))
 
@@ -626,9 +544,6 @@
                         }
                     }
                 }
-
-                //$('#election-results').html(template(contest));
-                console.log(contest);
             }
         )
     });

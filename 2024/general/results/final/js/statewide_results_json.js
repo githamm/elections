@@ -14,19 +14,6 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function toggleDiv(divName) {
-    var div = document.getElementById(divName);
-    if (div.style.display === "block") {
-        div.style.display = "none";
-    } else {
-        div.style.display = "block";
-    }
-}
-
-function myFunction(x) {
-    x.classList.toggle("fa-caret-up");
-}
-
 $(document).ready(function() {
 
     // Compile Handlebars templates
