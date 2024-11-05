@@ -12,10 +12,16 @@ body {
 
 .nav-wrapper {
     background: #f5f5dc;
-    padding: 5px;
+    padding: 1px;
     text-align: center;
-    line-height: 1.5;
     margin-bottom: 20px;
+}
+
+.explainer {
+    font-size: .9em;
+    padding: 15px;
+    line-height: 1.2;
+    margin: -20px 0 0 0;
 }
 
 .section-header {
@@ -26,6 +32,12 @@ body {
     padding: 5px;
     margin: 25px 0 0px 0;
     line-height: 1.1;
+}
+
+.small-county-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 10px 0 2px 0;
 }
 
 .race-name {
@@ -150,7 +162,7 @@ div.NO {
 /* COUNTY-LEVEL RESULTS */
 
 #county-name {
-    margin-bottom: 0;
+    margin: -10px 0 5px 0;
     font-size: 2em;
 }
 

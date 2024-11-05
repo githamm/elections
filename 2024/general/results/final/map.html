@@ -39,7 +39,7 @@
     <script id="results-template" type="text/x-handlebars-template">
         {{#each contestArray}}
         <table class="race-table">
-            <h2>{{county}}</h2>
+            <h2 class="small-county-name">{{county}}</h2>
             {{#if choiceArray.length}}
                 {{#eachByVotePct choiceArray}}
                     <tr>

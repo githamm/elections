@@ -14,161 +14,26 @@
 </head>
 
 <body>
-    <div class="nav-wrapper">
-        <p><strong>GO TO</strong> <a href="#">County results</a> &bull; <a href="#">Colorado presidential map</a></p>
-    </div>
     <div class="legend-wrapper">
-        <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div>
+        <!-- <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div> -->
         <p class="timestamp">Results updated <span id="timestamp"></span></p>
     </div>
-    <div>
-        <!-- <button onclick="toggleDiv('federal-offices')"></button> -->
+    <!-- <div>
         <h2 class="section-header">Federal offices</h2>
-    </div>
-    <div id="federal-offices"></div>
-    <div>
-        <div onclick="toggleDiv('ballot-measures')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">State ballot measures</h2>
-    </div>
-    <div class="hidden" id="ballot-measures"></div>
-    <div>
-        <div onclick="toggleDiv('state-offices')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">State and regional offices</h2>
-    </div>
-    <div class="hidden" id="state-offices"></div>
-    <div>
-        <div onclick="toggleDiv('local-ballot-measures')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">Local multi-county contests</h2>
-    </div>
-    <div class="hidden" id="local-ballot-measures"></div>
-    <!-- <h2 class="section-header">Local offices</h2>
-    <div id="local-offices"></div> -->
-    <div>
-        <div onclick="toggleDiv('judges')"><i onclick="myFunction(this)" class="fa fa-caret-down"></i></div>
-        <h2 class="section-header">Judges</h2>
-    </div>
-    <div class="hidden" id="judges"></div>
-    <script id="federal-offices-template" type="text/x-handlebars-template">
+    </div> -->
+    <div id="widget"></div>
+    <script id="widget-template" type="text/x-handlebars-template">
         {{#each this}}
     <table class="race-table">
-      <h2 class="race-name">{{'@text'}}</h2>
-      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
+      <h2 class="race-name" style="margin:5px 0 0 0">{{'@text'}}</h2>
         {{#if Choice.length }}
-          {{#eachByVotePct Choice}}
+          {{#each_upto Choice 2}}
             <tr>
               <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
               <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
               <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
             </tr>
-          {{/eachByVotePct}}
-        {{else}}
-          {{#with Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/with}}
-        {{/if}}
-      {{/each}}
-    </table>
-    </script>
-    <script id="ballot-measures-template" type="text/x-handlebars-template">
-        {{#each this}}
-    <table class="race-table">
-      <h2 class="race-name">{{'@text'}}</h2>
-      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
-        {{#if Choice.length }}
-          {{#eachByVotePct Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/eachByVotePct}}
-        {{else}}
-          {{#with Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/with}}
-        {{/if}}
-      {{/each}}
-    </table>
-    </script>
-    <script id="state-offices-template" type="text/x-handlebars-template">
-        {{#each this}}
-    <table class="race-table">
-      <h2 class="race-name">{{'@text'}}</h2>
-      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
-        {{#if Choice.length }}
-          {{#eachByVotePct Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/eachByVotePct}}
-        {{else}}
-          {{#with Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/with}}
-        {{/if}}
-      {{/each}}
-    </table>
-    </script>
-    <script id="local-ballot-measures-template" type="text/x-handlebars-template">
-        {{#each this}}
-    <table class="race-table">
-      <h2 class="race-name">{{'@text'}}</h2>
-      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
-        {{#if Choice.length }}
-          {{#eachByVotePct Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/eachByVotePct}}
-        {{else}}
-          {{#with Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/with}}
-        {{/if}}
-      {{/each}}
-    </table>
-    </script>
-    <script id="judges-template" type="text/x-handlebars-template">
-        {{#each this}}
-    <table class="race-table">
-      <h2 class="race-name">{{'@text'}}</h2>
-      <p class="precincts">Precincts reporting: {{'@precinctsReportingPercent'}}%</p>
-        {{#if Choice.length }}
-          {{#eachByVotePct Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/eachByVotePct}}
-        {{else}}
-          {{#with Choice}}
-            <tr>
-              <td style="width:40%"><div class="party-color-square {{'@party'}}"></div>{{'@text'}}</td>
-              <td style="width:40%"><div class="background-bar"><span class="color-bar {{'@party'}}" style="width:{{choiceVotePercent}}%"><span class="percent-vote">{{choiceVotePercent}}%</span></span></div></td>
-              <td class="total-votes" style="width:20%">{{'@totalVotes'}}</td>
-            </tr>
-          {{/with}}
+          {{/each_upto}}
         {{/if}}
       {{/each}}
     </table>
@@ -211,6 +76,17 @@
         return output;
     });
 
+    // Warning: untested code
+    Handlebars.registerHelper('each_upto', function(ary, max, options) {
+        if (!ary || ary.length == 0)
+            return options.inverse(this);
+
+        var result = [];
+        for (var i = 0; i < max && i < ary.length; ++i)
+            result.push(options.fn(ary[i]));
+        return result.join('');
+    });
+
     // Function to add commas to numbers
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -230,12 +106,7 @@
     }
 
     $(document).ready(function() {
-        // Compile Handlebars templates
-        let federalOfficesTemplate = Handlebars.compile($("#federal-offices-template").html());
-        let ballotMeasuresTemplate = Handlebars.compile($("#ballot-measures-template").html());
-        let stateOfficesTemplate = Handlebars.compile($("#state-offices-template").html());
-        let localBallotMeasuresTemplate = Handlebars.compile($("#local-ballot-measures-template").html());
-        let judgesTemplate = Handlebars.compile($("#judges-template").html());
+        let widgetTemplate = Handlebars.compile($("#widget-template").html());
 
         //var template = Handlebars.compile($("#results-template").html()); // Original template
 
@@ -383,70 +254,16 @@
                 }
 
                 // Group races into their own arrays
-                federalOfficesArray = data.ElectionResult.Contest.filter(function(el) { //9
+                electionWidgetArray = data.ElectionResult.Contest.filter(function(el) { //9
                     return el['@text'].includes('U.S. President') ||
-                        el['@text'].includes('U.S. Representative')
-                });
-                ballotMeasuresArray = data.ElectionResult.Contest.filter(function(el) { //14
-                    return el['@text'].includes('Amendment G') ||
+                        el['@text'].includes('U.S. Representative - District 4') ||
                         el['@text'].includes('Amendment H') ||
-                        el['@text'].includes('Amendment I') ||
-                        el['@text'].includes('Amendment J') ||
-                        el['@text'].includes('Amendment K') ||
-                        el['@text'].includes('Amendment 79') ||
-                        el['@text'].includes('Amendment 80') ||
-                        el['@text'].includes('Proposition JJ') ||
-                        el['@text'].includes('Proposition KK') ||
-                        el['@text'].includes('Proposition 127') ||
-                        el['@text'].includes('Proposition 128') ||
-                        el['@text'].includes('Proposition 129') ||
-                        el['@text'].includes('Proposition 130') ||
-                        el['@text'].includes('Proposition 131')
-                });
-                stateOfficesArray = data.ElectionResult.Contest.filter(function(el) { //121
-                    return el['@text'].includes('State Board of Education') ||
-                        el['@text'].includes('CU Regent') ||
-                        el['@text'].includes('State Senator') ||
-                        el['@text'].includes('State Representative') ||
-                        el['@text'].includes('District Attorney') ||
-                        el['@text'].includes('RTD Director')
+                        el['@text'].includes('Amendment K')
                 });
 
-                localBallotMeasuresArray = data.ElectionResult.Contest.filter(function(el) { //35
-                    return el['@text'].includes('Aurora') ||
-                        el['@text'].includes('Littleton') ||
-                        el['@text'].includes('Longmont') ||
-                        el['@text'].includes('Westminster') ||
-                        el['@text'].includes('Erie') ||
-                        el['@text'].includes('School') ||
-                        el['@text'].includes('Fire') ||
-                        el['@text'].includes('Water') ||
-                        el['@text'].includes('Health') ||
-                        el['@text'].includes('17th Judicial District Ballot Question 7B') ||
-                        el['@text'].includes('RTD Ballot') ||
-                        el['@text'].includes('San Miguel Authority for Regional Transportation (SMART) Ballot Issue 3A')
-                });
+                console.log(electionWidgetArray);
 
-                judgesArray = data.ElectionResult.Contest.filter(function(el) { // 116
-                    return el['@text'].includes('Justice') ||
-                        el['@text'].includes('Judge')
-                });
-
-                //console.log(allResultsArray);
-                console.log(federalOfficesArray);
-                console.log(ballotMeasuresArray);
-                console.log(stateOfficesArray);
-                console.log(localBallotMeasuresArray);
-                console.log(judgesArray);
-
-                //$('#election-results').html(template(data.ElectionResult)); // Original data object without race breakdowns
-                $('#federal-offices').html(federalOfficesTemplate(federalOfficesArray));
-                $('#ballot-measures').html(ballotMeasuresTemplate(ballotMeasuresArray));
-                $('#state-offices').html(stateOfficesTemplate(stateOfficesArray));
-                $('#local-ballot-measures').html(localBallotMeasuresTemplate(localBallotMeasuresArray));
-                $('#judges').html(judgesTemplate(judgesArray));
-
-                console.log(data.ElectionResult);
+                $('#widget').html(widgetTemplate(electionWidgetArray));
             }
         )
     });

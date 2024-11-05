@@ -9,13 +9,15 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
     <script src="./js/county_results.js"></script>
+    <link rel="icon" type="image/x-icon" href="https://www.denverpost.com/wp-content/uploads/2016/05/cropped-DP_bug_denverpost.jpg?w=32">
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 
 <body>
     <div class="nav-wrapper">
-    <p><strong>GO TO:</strong> <a href="#">Statewide results</a></p>
-  </div>
+        <p><strong>GO TO</strong> <a href="#">Statewide results</a> &bull; <a href="#">Colorado presidential map</a></p>
+        <p class="explainer">If a local contest occurred in multiple counties full results will be in the "Local Multi-County Contests" section on the statewide results page.</p>
+    </div>
     <fieldset>
         <legend><strong>Choose a county</strong></legend>
         <select id="county-dropdown">
@@ -86,16 +88,104 @@
         </select>
         <button id="county-button" onclick="getDropdownData();">Get results</button>
     </fieldset>
+    <h2 id="county-name"></h2>
     <div class="legend-wrapper">
         <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div>
         <p class="timestamp">Results updated <span id="timestamp"></span></p>
     </div>
-    <!-- Results from https://results.enr.clarityelections.com/CO/113964/web.285569/#/sumChoiceVotesmary -->
-    <!-- Extras page for 2002 primary results: https://extras.denverpost.com/app/elections/2022/primary-election-results/clarity.html -->
-    <h2 id="county-name"></h2>
-    <div id="election-results"></div>
-    <script id="results-template" type="text/x-handlebars-template">
-        {{#each resultsArray}}
+    <!-- <div id="all-results"></div> -->
+    <h2 class="section-header">Local contests</h2>
+    <div id="local-contests"></div>
+    <h2 class="section-header">Federal offices</h2>
+    <div id="federal-offices"></div>
+    <h2 class="section-header">State ballot measures</h2>
+    <div id="ballot-measures"></div>
+    <h2 class="section-header">State and regional offices</h2>
+    <div id="state-offices"></div>
+    <h2 class="section-header">Judges</h2>
+    <div id="judges"></div>
+    <!-- <script id="all-results-template" type="text/x-handlebars-template">
+        {{#each allResultsArray}}
+          <table class="race-table">
+            <span class="race-name">{{race}}</span>
+            {{#if choices.length }}
+              {{#eachByVotePct choices}}
+                <tr>
+                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
+                  <td class="total-votes" style="width:20%">{{votes}}</td>
+                </tr>
+              {{/eachByVotePct}}
+            {{/if}}
+          </table>
+        {{/each}}
+    </script> -->
+    <script id="federal-offices-template" type="text/x-handlebars-template">
+        {{#each federalOfficesArray}}
+          <table class="race-table">
+            <span class="race-name">{{race}}</span>
+            {{#if choices.length }}
+              {{#eachByVotePct choices}}
+                <tr>
+                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
+                  <td class="total-votes" style="width:20%">{{votes}}</td>
+                </tr>
+              {{/eachByVotePct}}
+            {{/if}}
+          </table>
+        {{/each}}
+    </script>
+    <script id="ballot-measures-template" type="text/x-handlebars-template">
+        {{#each ballotMeasuresArray}}
+          <table class="race-table">
+            <span class="race-name">{{race}}</span>
+            {{#if choices.length }}
+              {{#eachByVotePct choices}}
+                <tr>
+                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
+                  <td class="total-votes" style="width:20%">{{votes}}</td>
+                </tr>
+              {{/eachByVotePct}}
+            {{/if}}
+          </table>
+        {{/each}}
+    </script>
+    <script id="state-offices-template" type="text/x-handlebars-template">
+        {{#each stateOfficesArray}}
+          <table class="race-table">
+            <span class="race-name">{{race}}</span>
+            {{#if choices.length }}
+              {{#eachByVotePct choices}}
+                <tr>
+                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
+                  <td class="total-votes" style="width:20%">{{votes}}</td>
+                </tr>
+              {{/eachByVotePct}}
+            {{/if}}
+          </table>
+        {{/each}}
+    </script>
+    <script id="local-contests-template" type="text/x-handlebars-template">
+        {{#each localContestsArray}}
+          <table class="race-table">
+            <span class="race-name">{{race}}</span>
+            {{#if choices.length }}
+              {{#eachByVotePct choices}}
+                <tr>
+                  <td style="width:40%"><div class="party-color-square {{party}}"></div>{{name}}</td>
+                  <td style="width:40%"><div class="background-bar"><span class="color-bar {{party}}" style="width:{{pct}}%"><span class="percent-vote">{{pct}}%</span></span></div></td>
+                  <td class="total-votes" style="width:20%">{{votes}}</td>
+                </tr>
+              {{/eachByVotePct}}
+            {{/if}}
+          </table>
+        {{/each}}
+    </script>
+    <script id="judges-template" type="text/x-handlebars-template">
+        {{#each judgesArray}}
           <table class="race-table">
             <span class="race-name">{{race}}</span>
             {{#if choices.length }}
