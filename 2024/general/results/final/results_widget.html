@@ -10,22 +10,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.min.js"> </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <script src="./js/statewide_results.js"></script> -->
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 
 <body>
-    <div class="legend-wrapper">
+    <!-- <div class="legend-wrapper"> -->
         <!-- <div><span class="party-color-square legend-dem"></span><span class="legend-text">DEM</span><span class="party-color-square legend-rep"></span><span class="legend-text">REP</span><span class="party-color-square legend-oth"></span><span class="legend-text">OTHER / NO PARTY</span></div> -->
-        <p class="timestamp">Results updated <span id="timestamp"></span></p>
-    </div>
+        <!-- <p class="timestamp" style="margin-bottom:10px">Results updated <span id="timestamp"></span></p> -->
+    <!-- </div> -->
     <!-- <div>
         <h2 class="section-header">Federal offices</h2>
     </div> -->
     <div id="widget"></div>
+    <p class="timestamp" style="margin-top:-10px">Results updated <span id="timestamp"></span></p>
+    <p><a href="https://www.denverpost.com/2024/11/05/colorado-election-results-2024/" target="_parent">Go to full Colorado election results</a></p>
     <script id="widget-template" type="text/x-handlebars-template">
         {{#each this}}
     <table class="race-table">
-      <h2 class="race-name" style="margin:5px 0 0 0">{{'@text'}}</h2>
+      <h2 class="race-name" style="margin: -5px 0 -5px 0">{{'@text'}}</h2>
         {{#if Choice.length }}
           {{#each_upto Choice 2}}
             <tr>
@@ -92,19 +94,6 @@
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    function toggleDiv(divName) {
-        var div = document.getElementById(divName);
-        if (div.style.display === "block") {
-            div.style.display = "none";
-        } else {
-            div.style.display = "block";
-        }
-    }
-
-    function myFunction(x) {
-        x.classList.toggle("fa-caret-up");
-    }
-
     $(document).ready(function() {
         let widgetTemplate = Handlebars.compile($("#widget-template").html());
 
@@ -113,7 +102,7 @@
         //var data_url = 'https://results.enr.clarityelections.com/CO/Arapahoe/115905/314515/json/en/summary.json';
         //var data_url = 'https://results.enr.clarityelections.com/CO/122598/346692/json/en/summary.json';
         //var data_url = '../data/election_data.json';
-        var data_url = '../data/election_data.json';
+        var data_url = './data/election_data.json';
 
         $.getJSON(data_url,
             function(data) {
@@ -128,7 +117,7 @@
                         data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Presidential Electors', 'U.S. President')
                     }
                     if (data.ElectionResult.Contest[i]['@text'].includes('119th United States Congress') == true) {
-                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Representative to the 119th United States Congress', 'U.S. Representative')
+                        data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('Representative to the 119th United States Congress', 'U.S. Rep.')
                     }
                     if (data.ElectionResult.Contest[i]['@text'].includes('State Board of Education Member - Congressional') == true) {
                         data.ElectionResult.Contest[i]['@text'] = data.ElectionResult.Contest[i]['@text'].replace('State Board of Education Member - Congressional', 'State Board of Education -')
@@ -229,8 +218,6 @@
                                 data.ElectionResult.Contest[i].Choice[j]['@totalVotes'] = numberWithCommas(data.ElectionResult.Contest[i].Choice[j]['@totalVotes'])
                             }
                         }
-
-
                     }
 
                     // If only one candidate (object rather than array) do same as above
@@ -255,10 +242,10 @@
 
                 // Group races into their own arrays
                 electionWidgetArray = data.ElectionResult.Contest.filter(function(el) { //9
-                    return el['@text'].includes('U.S. President') ||
-                        el['@text'].includes('U.S. Representative - District 4') ||
-                        el['@text'].includes('Amendment H') ||
-                        el['@text'].includes('Amendment K')
+                    return el['@text'].includes('U.S. Rep. - District 4') ||
+                        el['@text'].includes('U.S. Rep. - District 8') ||
+                        el['@text'].includes('Proposition 127') ||
+                        el['@text'].includes('Proposition 131')
                 });
 
                 console.log(electionWidgetArray);

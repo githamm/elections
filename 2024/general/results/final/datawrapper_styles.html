@@ -1,0 +1,19 @@
+<div style="font-size:17px;font-weight:bold;text-align:center;margin-bottom:-10px">{{ county }} County<br><span style="color:{{ partycolor }}">{{ party }}+{{ FORMAT(abs, "0") }}</span></div>
+
+<table style="font-size:14px">
+    <tr>
+        <td style="border-bottom:1px solid silver;padding:5px"></th>
+        <td style="border-bottom:1px solid silver;padding:5px;color:#bbb">Pct</th>
+        <td style="border-bottom:1px solid silver;padding:5px;color:#bbb">Votes</th>
+    </tr>
+    <tr>
+        <td style="border-bottom:1px solid silver;padding:5px">Dem</td>
+        <td style="border-bottom:1px solid silver;padding:5px">{{ dempct }}%</td>
+        <td style="border-bottom:1px solid silver;padding:5px">{{ demvotes }}</td>
+    </tr>
+    <tr>
+        <td style="border-bottom:1px solid silver;padding:5px">Rep</td>
+        <td style="border-bottom:1px solid silver;padding:5px">{{ reppct }}%</td>
+        <td style="border-bottom:1px solid silver;padding:5px">{{ repvotes }}</td>
+    </tr>
+</table>
